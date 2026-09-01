@@ -1,0 +1,6 @@
+@Norn_HostAddress = http://localhost:5154
+
+GET {{Norn_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

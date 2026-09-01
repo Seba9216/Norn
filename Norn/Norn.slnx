@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+  <Project Path="Norn.Api/Norn.Api.csproj" />
+  <Project Path="Norn.Models/Norn.Models.csproj" />
+  <Project Path="Norn.Repository/Norn.Repository.csproj" />
+</Solution>

@@ -1,0 +1,25 @@
+services:
+  postgres:
+    env_file : 
+      - ../.env
+    image: postgres:18.2-trixie
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/data
+  norn.api:
+    image: ${DOCKER_REGISTRY-}nornapi
+    build:
+      context: .
+      dockerfile: Norn.Api/Dockerfile
+  norn.WebApp:
+    image : ${DOCKER_REGISTRY-}nornwebapp
+    build :
+      context: ../Norn.WebApp/nornWebApp
+      dockerfile: ./Dockerfile
+    ports:
+      - "4200:4200" 
+
+volumes:
+  postgres_data:
