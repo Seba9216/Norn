@@ -4,6 +4,8 @@ using Norn.Repository;
 
 namespace Norn.Api.Controllers;
 
+[Route("[controller]")]
+[ApiController]
 public class UserController : Controller
 {
     private IUserRepository _userRepository;
@@ -36,7 +38,7 @@ public class UserController : Controller
        var result = await _userRepository.CreateUser(new Models.Models.User
         {
             Email = request.Email,
-            Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+            Password = request.Password,
             Role = "User"
         });
         if (result) return Ok(result);

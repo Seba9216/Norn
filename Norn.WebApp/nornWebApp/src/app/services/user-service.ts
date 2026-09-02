@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { NornApi } from './norn-api';
 import { UserModel } from '../models/user-model';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,10 @@ import { UserModel } from '../models/user-model';
 export class UserService {
   private readonly api = inject(NornApi);
 
-  createUser(user: UserModel) {
-    return this.api.post<UserModel, UserModel>('/users', user);
+  public async createUser(user: UserModel) {
+    return firstValueFrom(this.api.post<boolean, UserModel>('/User', user));  }
+  
+  public async LoginUser(user: UserModel) {
+    return firstValueFrom(this.api.post<string,UserModel>('/User/Login', user))
   }
 }

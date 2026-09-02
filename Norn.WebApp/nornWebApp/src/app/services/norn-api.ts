@@ -6,7 +6,7 @@ import { inject, Injectable } from '@angular/core';
 })
 export class NornApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'localhost:8080';
+  private readonly baseUrl = 'http://localhost:8080';
 
   get<T>(endpoint: string) {
     return this.http.get<T>(`${this.baseUrl}${endpoint}`);

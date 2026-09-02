@@ -1,5 +1,9 @@
 export class UserModel {
-  public Email: string = '';
-  public Password: string = '';
-  public Role: string = '';
+  public email: string = '';
+  public password: string = '';
+  public role: string = '';
+
+  constructor(data?: Partial<UserModel>) {
+    Object.assign(this, data);
+  }
 }

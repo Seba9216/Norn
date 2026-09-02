@@ -4,7 +4,6 @@
       <form>
         <div class="col-md">
           <div class="form-floating">
-            <label for="userName">Username</label>
             <input
               type="text"
               id="userName"
@@ -15,9 +14,9 @@
             />
           </div>
         </div>
+        <p></p>
         <div class="col-md">
           <div class="form-floating">
-            <label for="password">Password</label>
             <input
               type="password"
               id="password"
@@ -28,7 +27,12 @@
             />
           </div>
         </div>
-      </form>
+        <p></p>
+        <p class="panel-buttons">
+        <button class="btn btn-success btn-sm" (click)="CreateUser()">RegisterCustomer</button>
+        <button class="btn btn-success btn-sm" (click)="Login()">Login</button>
+        </p>  
+    </form>
     </div>
   </div>
 </div>
