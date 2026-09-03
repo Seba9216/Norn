@@ -24,7 +24,7 @@ public class NornContext : DbContext
             new Role { Id = 1, RoleName = "Admin" },
             new Role { Id = 2, RoleName = "User" }
         );
-
+        modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
         modelBuilder.Entity<User>().HasOne<Role>()
             .WithMany()
             .HasForeignKey(u => u.RoleId)

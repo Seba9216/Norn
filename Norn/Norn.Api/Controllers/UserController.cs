@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Norn.Models.Models;
 using Norn.Models.Models.Requests;
 using Norn.Repository;
 
@@ -32,6 +34,9 @@ public class UserController : Controller
             token
         });
     }
+
+
+
     [HttpPost]
     public async Task<IActionResult> CreateUser(LoginRequest request)
     {
@@ -44,5 +49,12 @@ public class UserController : Controller
         if (result) return Ok(result);
 
         return BadRequest();
+    }
+
+    [HttpGet]
+    [Authorize(Roles ="Admin")]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        return Ok(await _userRepository.GetAllUsers());
     }
 }

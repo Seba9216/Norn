@@ -10,9 +10,17 @@ export class UserService {
   private readonly api = inject(NornApi);
 
   public async createUser(user: UserModel) {
-    return firstValueFrom(this.api.post<boolean, UserModel>('/User', user));  }
-  
-  public async LoginUser(user: UserModel) {
-    return firstValueFrom(this.api.post<string,UserModel>('/User/Login', user))
+    return firstValueFrom(this.api.post<boolean, UserModel>('/User', user));
+  }
+
+  public async loginUser(user: UserModel) {
+    return firstValueFrom(this.api.post<any, UserModel>('/User/Login', user));
+  }
+
+  public async getAllUsers() {
+    return firstValueFrom(this.api.get<UserModel[]>('/User'));
+  }
+  public async promoteUser(user : UserModel){
+    return firstValueFrom(this.api.put<UserModel,UserModel>('/User/Promote',user))
   }
 }
