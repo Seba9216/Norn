@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { NornApi } from './norn-api';
 import { UserModel } from '../models/user-model';
 import { firstValueFrom } from 'rxjs';
+import { PromoteUserRequest } from '../models/promote-user-request';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,10 @@ export class UserService {
   public async getAllUsers() {
     return firstValueFrom(this.api.get<UserModel[]>('/User'));
   }
-  public async promoteUser(user : UserModel){
-    return firstValueFrom(this.api.put<UserModel,UserModel>('/User/Promote',user))
+  public async promoteUser(user : PromoteUserRequest){
+    return firstValueFrom(this.api.put<UserModel,PromoteUserRequest>('/User',user))
+  }
+  public async deleteUser(email : string){
+        return firstValueFrom(this.api.delete('/User/' + email))
   }
 }

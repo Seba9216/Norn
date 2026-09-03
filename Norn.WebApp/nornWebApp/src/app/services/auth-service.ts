@@ -25,7 +25,6 @@ export class AuthService {
       return null;
     }
     const decoded = this.jwtHelper.decodeToken(token);
-    console.log(decoded);
     return decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
   }
   isAdministrator(): boolean {

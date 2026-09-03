@@ -6,7 +6,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 90vh;
   background: linear-gradient(135deg, #2fb60d 0%, #f8f7f8ee 100%);
 }
 

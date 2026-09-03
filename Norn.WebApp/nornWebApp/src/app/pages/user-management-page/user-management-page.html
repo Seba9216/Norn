@@ -1,0 +1,18 @@
+<div class="modal-body">
+  @if (users !== null && users.length > 0) {
+    <div class="list-group">
+      @for (user of users; track user.email) {
+        <li class="list-group-item">
+          {{ 'Email : ' }}
+          {{ user.email }}
+          {{ 'Rolle :' }}
+          {{ user.role }}
+          @if (user.role === 'User') {
+            <button class="btn btn-success" (click)="promoteUser(user)">Gør til admin</button>
+          }
+          <button class="btn btn-danger" (click)="deleteUser(user)">Fjern bruger</button>
+        </li>
+      }
+    </div>
+  }
+</div>

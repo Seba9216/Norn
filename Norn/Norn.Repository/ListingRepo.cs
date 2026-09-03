@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Norn.Repository;
 
-public abstract class ListingRepo<TEntity> 
+public abstract class ListingRepo<TEntity>
     where TEntity : class
 {
     protected readonly NornContext Context;
@@ -12,9 +12,12 @@ public abstract class ListingRepo<TEntity>
     {
         Context = context;
     }
-
     public async Task<List<TEntity>> GetAllEntitiesFromTable()
     {
-        return await Context.Set<TEntity>().ToListAsync();
+        return await Context.Set<TEntity>().AsNoTracking().ToListAsync();
+    }
+    public async Task<TEntity?> GetByPrimaryKey(int primaryKey)
+    {
+        return await Context.Set<TEntity>().FindAsync(primaryKey);
     }
 }

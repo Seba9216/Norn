@@ -11,6 +11,7 @@
               name="userName"
               required
               placeholder="Enter username"
+              minlength="1"
             />
           </div>
         </div>
@@ -24,15 +25,16 @@
               name="password"
               required
               placeholder="Enter password"
+              minlength="1"
             />
           </div>
         </div>
         <p></p>
         <p class="panel-buttons">
-        <button class="btn btn-success btn-sm" (click)="CreateUser()">RegisterCustomer</button>
-        <button class="btn btn-success btn-sm" (click)="Login()">Login</button>
-        </p>  
-    </form>
+          <button class="btn btn-success btn-sm" (click)="CreateUser()">RegisterCustomer</button>
+          <button class="btn btn-success btn-sm" (click)="Login()">Login</button>
+        </p>
+      </form>
     </div>
   </div>
 </div>

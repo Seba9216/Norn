@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Norn.Models.Entities;
+using Norn.Models.Models.Requests;
 using System.Data;
 
 namespace Norn.Repository;
@@ -7,28 +8,29 @@ namespace Norn.Repository;
 public class UserRepository : ListingRepo<User>, IUserRepository
 {
     private NornContext _context;
-
-    public UserRepository(NornContext context): base(context)
+    private IRoleRepository _roleRepository;
+    public UserRepository(NornContext context, IRoleRepository roleRepository): base(context)
     {
         _context = context;
+        _roleRepository = roleRepository;
     }
     public async Task<Models.Models.User?> GetUserByEmail(string email)
     {
-        var result = await _context.Users.AsNoTracking().SingleOrDefaultAsync(x => x.Email == email);
+        var result = await GetEntityByEmail(email);
         if (result != null)
         {
             var role = await _context.Roles.SingleAsync(x => x.Id == result.RoleId);
-            return new Models.Models.User
-            {
-                Email = result.Email,
-                Password = result.Password,
-                Role = role.RoleName.ToString()
-            };
+            return MapToModel(result.Email, result.Password, role.RoleName);
         }
         else
         {
             return null;
         }
+    }
+
+    private async Task<User?> GetEntityByEmail(string email)
+    {
+        return await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
     }
 
     public async Task<List<Models.Models.User>> GetAllUsers()
@@ -37,12 +39,7 @@ public class UserRepository : ListingRepo<User>, IUserRepository
         var resultAsModels = result.Select(x =>
         {
             var role = _context.Roles.Single(entity => entity.Id == x.RoleId);
-            return new Models.Models.User
-            {
-                Email = x.Email,
-                Password = x.Password,
-                Role = role.RoleName.ToString()
-            };
+            return MapToModel(x.Email, x.Password, role.RoleName);
         }).ToList();
         return resultAsModels;
     }
@@ -82,6 +79,43 @@ public class UserRepository : ListingRepo<User>, IUserRepository
         }
     }
 
+    private Models.Models.User MapToModel(string email, string password, string roleName)
+    {
+        return new Models.Models.User
+        {
+            Email = email,
+            Password = password,
+            Role = roleName
+        };
+    }
+    public async Task<bool> DeleteUserByEmail(string email)
+    {
+        var userToRemove = await GetEntityByEmail(email);
+        if (userToRemove != null)
+        {
+            _context.Users.Remove(userToRemove);
+            await _context.SaveChangesAsync();
+            return true; 
+        }
+        return false;
+    }
+
+    public async Task<Models.Models.User> UpdateRoleForUser(PromoteUserRequest userRequest)
+    {
+        var roleToUpdateTo = await _roleRepository.GetRoleByName(userRequest.role);
+        if(roleToUpdateTo is null)
+        {
+            throw new InvalidOperationException("Role does not exist");
+        }
+        var userToPromote = await GetEntityByEmail(userRequest.email);
+        if(userToPromote == null)
+        {
+            throw new InvalidOperationException("User does not exist");
+        }
+        userToPromote.RoleId = roleToUpdateTo.Id;
+        await _context.SaveChangesAsync();
+        return MapToModel(userToPromote.Email, userToPromote.Password, roleToUpdateTo.RoleName);
+    }
 
 
 

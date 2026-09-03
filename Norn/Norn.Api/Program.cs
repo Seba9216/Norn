@@ -28,6 +28,7 @@ builder.Services.AddCors(options =>
 //Tilføj din dependncy injection her
 builder.Services.AddScoped<IBearerTokenGenerator, BearerTokenGenerator>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>

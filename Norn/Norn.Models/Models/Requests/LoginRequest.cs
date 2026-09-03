@@ -1,3 +1,10 @@
-﻿namespace Norn.Models.Models.Requests;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record LoginRequest(string Email,string Password);
+namespace Norn.Models.Models.Requests;
+
+public class LoginRequest
+{
+    [RegularExpression("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")]
+    public required string Email { get; set; }
+    public required string Password { get; set; }
+};
