@@ -22,4 +22,4 @@ jobs:
         run: dotnet restore ./Norn/Norn.slnx
           
       - name: Build solution
-        run: dotnet build --no-restore
+        run: dotnet build ./Norn/Norn.slnx --no-restore
