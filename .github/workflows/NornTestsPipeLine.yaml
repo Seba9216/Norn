@@ -24,4 +24,4 @@ jobs:
       - name: Build solution
         run: dotnet build ./Norn/Norn.slnx --no-restore
       - name: run Unit Tests
-        run: dotnet test ./Norn/Norn/TestProject1/Norn.IntegrationTests.csproj
+        run: dotnet test ./Norn/Norn/Norn.IntegrationTests/Norn.IntegrationTests.csproj

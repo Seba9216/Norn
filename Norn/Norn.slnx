@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/Tests/">
-    <Project Path="Tests/TestProject1/Norn.IntegrationTests.csproj" Id="8b25164a-0eed-4a83-87e2-4c049868adf0" />
+    <Project Path="Tests/Norn.IntegrationTests/Norn.IntegrationTests.csproj" Id="8b25164a-0eed-4a83-87e2-4c049868adf0" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />
