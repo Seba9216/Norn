@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -18,4 +20,4 @@ jobs:
           
       
       - name: Build solution
-        run: dotnet build ./Norn/Norn.slnx --no-restore
+        run: dotnet build --no-restore
