@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Norn.Models.Entities;
+using Norn.Models.Models.Mappers;
 using Norn.Models.Models.Requests;
 using System.Data;
 
@@ -20,7 +21,7 @@ public class UserRepository : ListingRepo<User>, IUserRepository
         if (result != null)
         {
             var role = await _context.Roles.SingleAsync(x => x.Id == result.RoleId);
-            return MapToModel(result.Email, result.Password, role.RoleName);
+            return UserMapper.MapToModel(result.Email, result.Password, role.RoleName);
         }
         else
         {
@@ -39,7 +40,7 @@ public class UserRepository : ListingRepo<User>, IUserRepository
         var resultAsModels = result.Select(x =>
         {
             var role = _context.Roles.Single(entity => entity.Id == x.RoleId);
-            return MapToModel(x.Email, x.Password, role.RoleName);
+            return UserMapper.MapToModel(x.Email, x.Password, role.RoleName);
         }).ToList();
         return resultAsModels;
     }
@@ -79,15 +80,6 @@ public class UserRepository : ListingRepo<User>, IUserRepository
         }
     }
 
-    private Models.Models.User MapToModel(string email, string password, string roleName)
-    {
-        return new Models.Models.User
-        {
-            Email = email,
-            Password = password,
-            Role = roleName
-        };
-    }
     public async Task<bool> DeleteUserByEmail(string email)
     {
         var userToRemove = await GetEntityByEmail(email);
@@ -114,7 +106,7 @@ public class UserRepository : ListingRepo<User>, IUserRepository
         }
         userToPromote.RoleId = roleToUpdateTo.Id;
         await _context.SaveChangesAsync();
-        return MapToModel(userToPromote.Email, userToPromote.Password, roleToUpdateTo.RoleName);
+        return UserMapper.MapToModel(userToPromote.Email, userToPromote.Password, roleToUpdateTo.RoleName);
     }
 
 

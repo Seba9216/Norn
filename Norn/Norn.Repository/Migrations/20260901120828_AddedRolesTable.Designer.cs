@@ -57,7 +57,7 @@ namespace Norn.Repository.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Satuts")
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
