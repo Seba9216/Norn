@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Norn.Repository.Migrations
 {
     [DbContext(typeof(NornContext))]
-    [Migration("20260905083949_AddedOrginisationAndTimeIntervalsToTable")]
-    partial class AddedOrginisationAndTimeIntervalsToTable
+    [Migration("20260905093243_ReinitializeDataBase")]
+    partial class ReinitializeDataBase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,9 +37,6 @@ namespace Norn.Repository.Migrations
                     b.Property<int>("BookingStatusId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("BookingStatusId1")
-                        .HasColumnType("integer");
-
                     b.Property<int>("RoomId")
                         .HasColumnType("integer");
 
@@ -52,8 +49,6 @@ namespace Norn.Repository.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BookingStatusId");
-
-                    b.HasIndex("BookingStatusId1");
 
                     b.HasIndex("RoomId");
 
@@ -72,6 +67,9 @@ namespace Norn.Repository.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.PrimitiveCollection<List<int>>("BookingIds")
+                        .HasColumnType("integer[]");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -248,7 +246,6 @@ namespace Norn.Repository.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.PrimitiveCollection<List<int>>("BookingIds")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<string>("Email")
@@ -289,15 +286,9 @@ namespace Norn.Repository.Migrations
 
             modelBuilder.Entity("Norn.Models.Entities.Booking", b =>
                 {
-                    b.HasOne("Norn.Models.Entities.BookingStatus", null)
-                        .WithMany()
-                        .HasForeignKey("BookingStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Norn.Models.Entities.BookingStatus", "BookingStatus")
-                        .WithMany()
-                        .HasForeignKey("BookingStatusId1")
+                        .WithMany("Bookings")
+                        .HasForeignKey("BookingStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -372,6 +363,11 @@ namespace Norn.Repository.Migrations
                         .HasForeignKey("RoomsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Norn.Models.Entities.BookingStatus", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("Norn.Models.Entities.Room", b =>

@@ -34,8 +34,10 @@ public class NornContext : DbContext
         modelBuilder.Entity<Organisation>()
             .HasMany(x => x.Rooms).WithMany(x => x.Organisations);
 
-        modelBuilder.Entity<Booking>().HasOne<BookingStatus>()
-            .WithMany()
+
+        modelBuilder.Entity<Booking>()
+            .HasOne(x => x.BookingStatus)
+            .WithMany(x => x.Bookings)
             .HasForeignKey(x => x.BookingStatusId);
 
         modelBuilder.Entity<Booking>()
