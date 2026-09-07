@@ -7,6 +7,5 @@ public class BookingStatus
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public required string Status { get; set; } 
-    public List<int>? BookingIds { get; set; }
     public List<Booking>? Bookings { get; set; }
 }

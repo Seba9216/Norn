@@ -5,6 +5,8 @@ import { authGuard } from './services/guards/auth-guard-guard';
 import { UserManagementPage } from './pages/user-management-page/user-management-page';
 import { userResolver } from './resolvers/user-resolver';
 import { authAdminGuard } from './services/guards/auth-admin-guard';
+import { AdministrationPage } from './pages/administration-page/administration-page';
+import { organisationResolver } from './resolvers/organisation-resolver';
 
 export const routes: Routes = [
   {
@@ -21,5 +23,11 @@ export const routes: Routes = [
     component: UserManagementPage,
     canActivate: [authAdminGuard],
     resolve: { users: userResolver },
+  },
+  {
+    path: 'administration',
+    component: AdministrationPage,
+    canActivate: [authAdminGuard],
+    resolve: { organisations: organisationResolver },
   },
 ];

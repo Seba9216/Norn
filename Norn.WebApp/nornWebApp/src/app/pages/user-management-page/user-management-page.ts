@@ -11,31 +11,30 @@ import { email } from '@angular/forms/signals';
   templateUrl: './user-management-page.html',
 })
 export class UserManagementPage implements OnInit {
-  private userService = inject(UserService)
+  private userService = inject(UserService);
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
-  
+
   public users: UserModel[] | null = null;
-  
+
   ngOnInit(): void {
     const users = this.route.snapshot.data['users'] as UserModel[];
     this.users = users;
   }
-  async promoteUser(user : UserModel){
+  async promoteUser(user: UserModel) {
     const promoteRequest = new PromoteUserRequest({
-       email : user.email,
-       role : "Admin"
-    })
+      email: user.email,
+      role: 'Admin',
+    });
     await this.userService.promoteUser(promoteRequest);
     await this.updateList();
   }
   async updateList() {
     this.users = await this.userService.getAllUsers();
     this.cdr.detectChanges();
-    
-  };
-  async deleteUser(user : UserModel){
-   await this.userService.deleteUser(user.email); 
-  await this.updateList();
+  }
+  async deleteUser(user: UserModel) {
+    await this.userService.deleteUser(user.email);
+    await this.updateList();
   }
 }

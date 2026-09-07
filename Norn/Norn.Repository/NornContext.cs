@@ -33,7 +33,7 @@ public class NornContext : DbContext
 
         modelBuilder.Entity<Organisation>()
             .HasMany(x => x.Rooms).WithMany(x => x.Organisations);
-
+        modelBuilder.Entity<Organisation>().HasIndex(x => x.Name).IsUnique();
 
         modelBuilder.Entity<Booking>()
             .HasOne(x => x.BookingStatus)

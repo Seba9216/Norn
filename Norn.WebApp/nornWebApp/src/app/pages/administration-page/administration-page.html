@@ -1,0 +1,32 @@
+
+<div class="container-fluid p-3">
+  <button
+    class="btn btn-success mb-3"
+    (click)="CreateOrganisation()">
+    Add organisation
+  </button>
+
+  @if (organisations.length > 0) {
+    <div class="list-group">
+      @for (organisation of organisations; track organisation.id) {
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+          <span>{{ organisation.name }}</span>
+
+          <button
+            class="btn btn-primary btn-sm"
+            (click)="updateOrganisation(organisation)">
+            Update organisation
+          </button>
+          <button
+              class="btn btn-danger btn-sm"
+
+          >
+            Delete organisation
+          </button>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="text-muted">No organisations found.</p>
+  }
+</div>

@@ -8,9 +8,9 @@
           {{ 'Rolle :' }}
           {{ user.role }}
           @if (user.role === 'User') {
-            <button class="btn btn-success" (click)="promoteUser(user)">Gør til admin</button>
+            <button class="btn btn-success" (click)="promoteUser(user)">promote to admin</button>
           }
-          <button class="btn btn-danger" (click)="deleteUser(user)">Fjern bruger</button>
+          <button class="btn btn-danger" (click)="deleteUser(user)">Remove user</button>
         </li>
       }
     </div>

@@ -29,6 +29,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IBearerTokenGenerator, BearerTokenGenerator>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IOrganisationRepository, OrganisationRepository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>

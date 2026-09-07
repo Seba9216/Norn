@@ -6,6 +6,5 @@ import { UserService } from '../services/user-service';
 export const userResolver: ResolveFn<UserModel[] | null> = (route, state) => {
   const userService = inject(UserService);
   const usersResult = userService.getAllUsers();
-  console.log(usersResult);
   return usersResult;
 };

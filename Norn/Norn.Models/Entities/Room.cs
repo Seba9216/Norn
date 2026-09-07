@@ -11,11 +11,8 @@ public class Room
     public int Id { get; set; }
     public required string Name { get; set; }
     
-    public List<int>? TimeIntervalIds { get; set; }
-
     public List<TimeInterval> TimeIntervals { get; set; }
     
-    public List<int>? BookingIds { get; set; }
     
     public List<Booking> Bookings { get; set; }
     
@@ -28,8 +25,6 @@ public class Room
     [Range(0, 60)]
     public byte? Increment { get; set; }
     
-    public List<int> OrginisationIds { get; set; }
-
     public List<Organisation> Organisations { get; set; }
 
 }

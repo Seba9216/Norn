@@ -6,7 +6,7 @@ using Norn.Models.Models.Requests;
 
 namespace Norn.Repository;
 
-internal class OrganisationRepository : ListingRepo<Organisation>, IOrganisationRepository
+public class OrganisationRepository : ListingRepo<Organisation>, IOrganisationRepository
 {
     NornContext _nornContext;
     public OrganisationRepository(NornContext context) : base(context)
@@ -22,16 +22,6 @@ internal class OrganisationRepository : ListingRepo<Organisation>, IOrganisation
             Name = createOrganisationRequest.Name
         };
         _nornContext.Add(createdRoom);
-        await _nornContext.SaveChangesAsync();
-
-        foreach(var room in createOrganisationRequest.RoomIds)
-        {
-            var roomToFind = await _nornContext.Rooms.SingleOrDefaultAsync(x => x.Id == room);
-            if (roomToFind is not null)
-            {
-                 roomToFind.OrginisationIds.Add(createdRoom.Id);
-            } 
-        }
         await _nornContext.SaveChangesAsync();
 
 
