@@ -6,11 +6,11 @@ public interface IOrganisationRepository
 {
     public Task<Models.Models.Organisation> CreateOrganisation(CreateOrganisationRequest createOrganisationRequest);
 
-    public Task<Models.Models.Organisation> UpdateOrganisation(CreateOrganisationRequest createOrganisationRequest);
-
     public Task<bool> DeleteOrganisation(int id);
 
     public Task<List<Models.Models.Organisation>> GetAllOrganisations();
+    public Task<Models.Models.Organisation> UpdateOrganisation(UpdateOrganisationRequest request);
+
     public Task<List<int>> GetRelatedRooms(int id);
 
 }

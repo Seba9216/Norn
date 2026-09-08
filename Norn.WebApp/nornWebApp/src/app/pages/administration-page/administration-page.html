@@ -28,7 +28,7 @@
           <div class="list-group-item d-flex justify-content-between">
             <span>{{ room.name }}</span>
             <button class="btn btn-primary btn-sm" (click)="updateRoom(room)">Update Room</button>
-            <button class="btn btn-danger btn-sm">Delete Room</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteRoom(room.id)">Delete Room</button>
           </div>
         }
       </div>

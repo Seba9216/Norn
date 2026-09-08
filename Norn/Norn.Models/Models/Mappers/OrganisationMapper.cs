@@ -8,12 +8,27 @@ public static class OrganisationMapper
     {
         return new Models.Organisation { Id = id, Name = name, Rooms = rooms };
     }
-    public static Models.RoomRelation MapToModel(Entities.Room room)
+    public static Models.RoomRelation? MapToModel(Entities.Room room)
     {
-        return new RoomRelation
+        if (room != null)
         {
-            id = room.Id,
-            RoomName = room.Name
+            return new RoomRelation
+            {
+                id = room.Id,
+                RoomName = room.Name
+            };
+        }
+        return null;
+    }
+
+    public static Models.Organisation MapToModel(Entities.Organisation organisation)
+    {
+        var rooms = organisation.OrganisationRooms?.Select(or => MapToModel(or.Room)).ToList();
+        return new Models.Organisation
+        {
+            Id = organisation.Id,
+            Name = organisation.Name,
+            Rooms = rooms
         };
     }
 }

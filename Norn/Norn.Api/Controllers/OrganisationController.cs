@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Norn.Models.Models;
+using Norn.Models.Models.Requests;
 using Norn.Repository;
 
 namespace Norn.Api.Controllers;
@@ -30,13 +31,21 @@ public class OrganisationController : Controller
     {
         return(await _organisationRepository.GetAllOrganisations());
     }
-    [HttpGet("Related/{id}")]
+    [HttpPut]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateOrganisation(UpdateOrganisationRequest request)
+    {
+        var update = await _organisationRepository.UpdateOrganisation(request);
+        return Ok();
+    }
+
+    [HttpGet("Related/{Id}")]
     [Authorize(Roles = "Admin")]
     public async Task<List<int>> GetRelatedRooms([FromRoute]int id)
     {
         return await _organisationRepository.GetRelatedRooms(id);
     }
-    [HttpDelete("{id}")]
+    [HttpDelete("{Id}")]
     [Authorize(Roles = "Admin")]
     public async Task<bool> DeleteOrganistation([FromRoute]int id)
     {

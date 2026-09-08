@@ -6,8 +6,14 @@ namespace Norn.Models.Models.Mappers;
 public static class RoomMapper
 {
 
-    public  static Models.Room MapToModel(Entities.Room room, List<OrgnisationRelation>? relations)
+    public  static Models.Room MapToModel(Entities.Room room)
     {
+        var relations = room.OrganisationRooms?.Select(x => x.Organisation);
+        var relationsResult = new List<OrganisationRelation>();
+        if(relations is not null)
+        {
+            relationsResult = relations.Select(x => MapToModel(x)).ToList();
+        }
         return new Room
         {
             Id = room.Id,
@@ -23,15 +29,19 @@ public static class RoomMapper
             TimeLease = room.TimeLease,
             FromHour = room.FromHour,
             ToHour = room.ToHour,
-            Organisations = relations
+            Organisations = relationsResult
         };
     }
-    public static Models.OrgnisationRelation MapToModel(Entities.Organisation organisation)
+    public static Models.OrganisationRelation? MapToModel(Entities.Organisation organisation)
     {
-        return new OrgnisationRelation
+        if (organisation != null)
         {
-            id = organisation.Id,
-            OrganisationName = organisation.Name
-        };
+            return new OrganisationRelation
+            {
+                id = organisation.Id,
+                OrganisationName = organisation.Name
+            };
+        }
+        return null;
     }
 }

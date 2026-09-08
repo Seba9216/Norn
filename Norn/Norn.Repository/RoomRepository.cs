@@ -2,6 +2,7 @@
 using Norn.Models.Entities;
 using Norn.Models.Models.Mappers;
 using Norn.Models.Models.Requests;
+using System.Security;
 
 namespace Norn.Repository;
 
@@ -50,38 +51,70 @@ public class RoomRepository : ListingRepo<Room>, IRoomRepository
                 await _nornContext.SaveChangesAsync();
             }
         }
-
-        if (entity.OrganisationRooms != null)
-        {
-            return RoomMapper.MapToModel(entity, entity.OrganisationRooms.Select(x =>
-            {
-                return RoomMapper.MapToModel(x.Organisation);
-            }).ToList());
-        }
-        else return RoomMapper.MapToModel(entity, null);
+        return RoomMapper.MapToModel(entity);
     }
+    public async Task<Models.Models.Room> UpdateByRoom(UpdateRoomRequest request)
+    {
+        var singularEntity = await GetByPrimaryKey(request.Id);
+        if(singularEntity != null)
+        {
+            singularEntity.Saturday = request.Saturday;
+            singularEntity.Sunday = request.Sunday;
+            singularEntity.Thursday = request.Thursday;
+            singularEntity.Wednesday = request.Wensday;
+            singularEntity.Tuesday = request.Tuesday;
+            singularEntity.Monday = request.Monday;
+            singularEntity.FromHour = request.FromHour;
+            singularEntity.ToHour = request.ToHour;
+            singularEntity.TimeLease = request.TimeLease;
+            singularEntity.Increment = request.Increment;
+            if(request.OrganisationIds != null)
+            {
+                var currentOrgs = await GetAllRelatedOrgs(request.Id);
+                
+                var orgsToRemove = currentOrgs.Except(request.OrganisationIds).ToList();
+                foreach(var orgToRemove in orgsToRemove)
+                {
+                    var entityToRemove = await _nornContext.OrganisationRoom.SingleOrDefaultAsync(x => x.OrganisationId == request.Id && x.RoomId == orgToRemove);
+                    if(entityToRemove is not null)
+                    {
+                        _nornContext.OrganisationRoom.Remove(entityToRemove);
+                    }
+                }
+                var orgsToAdd = request.OrganisationIds.Except(currentOrgs);
+                foreach (var orgToAdd in orgsToAdd)
+                {
+                    _nornContext.OrganisationRoom.Add(new OrganisationRoom { RoomId = singularEntity.Id, OrganisationId= orgToAdd });
+
+                }
+                await _nornContext.SaveChangesAsync();
+            }
+            return RoomMapper.MapToModel(singularEntity);
+        }
+        else
+        {
+            throw new InvalidOperationException("could not find room");
+        }
+
+    } 
     public async Task<List<Models.Models.Room>> GetAllRooms()
     {
         var result = await GetAllEntitiesFromTable();
         return result.Select(x =>
         {
-            if (x.OrganisationRooms != null)
-            {
-                return RoomMapper.MapToModel(x, x.OrganisationRooms.Select(x =>
-                    {
-                        if (x.Organisation != null)
-                        {
-                            return RoomMapper.MapToModel(x.Organisation);
-                        }
-                        return null;
-                    }).ToList());
-
-                 
-            }
-            else {
-                return RoomMapper.MapToModel(x, null);
-                };
+            return RoomMapper.MapToModel(x);
         }).ToList();
+    }
+    public async Task<bool> DeleteRoom(int id)
+    {
+        var foundEntity = await GetByPrimaryKey(id);
+        if (foundEntity is not null)
+        {
+            _nornContext.Remove(foundEntity);
+            await _nornContext.SaveChangesAsync();
+            return true;
+        }
+        return false;
     }
     public async Task<List<int>> GetAllRelatedOrgs(int id)
     {

@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Norn.Models.Entities;
 using Norn.Models.Models.Mappers;
 using Norn.Models.Models.Requests;
-using System.Collections.Specialized;
-using System.ComponentModel;
 
 namespace Norn.Repository;
 
@@ -48,7 +46,6 @@ public class OrganisationRepository : ListingRepo<Organisation>, IOrganisationRe
             await _nornContext.SaveChangesAsync();
         }
 
-        //TODO HUSK at lav den her når rooms repo kommer på
         return OrganisationMapper.MapToModel(createdRoom.Id, createdRoom.Name, null);
     }
 
@@ -57,7 +54,7 @@ public class OrganisationRepository : ListingRepo<Organisation>, IOrganisationRe
     {
         try
         {
-            var entity = await _nornContext.Organisations.SingleOrDefaultAsync(x => x.Id == id);
+            var entity = await GetByPrimaryKey(id);
             _nornContext.Remove(entity);
             await _nornContext.SaveChangesAsync();
             return true;
@@ -67,6 +64,39 @@ public class OrganisationRepository : ListingRepo<Organisation>, IOrganisationRe
             return false;
         }
     }
+    public async Task<Models.Models.Organisation> UpdateOrganisation(UpdateOrganisationRequest request)
+    {
+        var singularEntity = await GetByPrimaryKey(request.Id);
+        if (singularEntity != null)
+        {
+            singularEntity.Name = request.Name;
+            if (request.RoomIds != null)
+            {
+
+                var roomsToRemove = (await GetRelatedRooms(request.Id)).Except(request.RoomIds).ToList();
+                foreach (var roomToRemove in roomsToRemove)
+                {
+                    var entityToRemove = await _nornContext.OrganisationRoom.SingleOrDefaultAsync(x => x.OrganisationId == request.Id && x.RoomId == roomToRemove);
+                    if (entityToRemove is not null)
+                    {
+                        _nornContext.OrganisationRoom.Remove(entityToRemove);
+                    }
+                }
+                var roomsToAdd = request.RoomIds.Except(await GetRelatedRooms(request.Id)).ToList();
+                foreach (var roomToAdd in roomsToAdd)
+                {
+                    _nornContext.OrganisationRoom.Add(new OrganisationRoom { OrganisationId = singularEntity.Id, RoomId = roomToAdd });
+                }
+                await _nornContext.SaveChangesAsync();
+            }
+
+        }
+        else
+        {
+            throw new InvalidOperationException("Orginisation not found");
+        }
+        return OrganisationMapper.MapToModel(singularEntity);
+    }
 
     public async Task<List<Models.Models.Organisation>> GetAllOrganisations()
     {
@@ -74,24 +104,8 @@ public class OrganisationRepository : ListingRepo<Organisation>, IOrganisationRe
 
         var resultAsModels = result.Select(x =>
         {
-            if (x.OrganisationRooms != null)
-            {
-                return OrganisationMapper.MapToModel(x.Id, x.Name, x.OrganisationRooms.Select(x =>
-                {
-                    if (x.Room != null)
-                    {
-                        return OrganisationMapper.MapToModel(x.Room);
-                    }
-                    return null;
-                }).ToList());
-            }
-            return OrganisationMapper.MapToModel(x.Id, x.Name, null);
+            return OrganisationMapper.MapToModel(x);
         }).ToList();
         return resultAsModels;
-    }
-
-    public Task<Models.Models.Organisation> UpdateOrganisation(CreateOrganisationRequest createOrganisationRequest)
-    {
-        throw new NotImplementedException();
     }
 }

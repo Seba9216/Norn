@@ -22,7 +22,7 @@ export class OrganisationService extends BaseService {
   }
 
   public async updateOrganisation(organisation: CreateOrganisationModel) {
-    return firstValueFrom(this.api.put<any, CreateOrganisationModel>(this.apiPath, organisation));
+    return firstValueFrom(this.api.put<CreateOrganisationModel, CreateOrganisationModel>(this.apiPath, organisation));
   }
   public async deleteOrganisation(id: number) {
     return firstValueFrom(this.api.delete<boolean>(this.apiPath + '/' + id));

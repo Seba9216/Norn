@@ -24,4 +24,10 @@ export class RoomService extends BaseService {
   public async getAllRelatedOrgs(id : number){
     return firstValueFrom(this.api.get<number[]>(this.apiPath + '/Related/' + id));
   }
+  public async updateRoom(request : CreateOrUpdateRoomModel){
+    return firstValueFrom(this.api.put<CreateOrUpdateRoomModel,CreateOrUpdateRoomModel>(this.apiPath,request))
+  }
+  public async deleteRoom(id : number){
+    return firstValueFrom(this.api.delete<boolean>(this.apiPath + '/' + id))
+  }
 }

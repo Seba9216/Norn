@@ -20,6 +20,6 @@ public class Room
 
     public byte? ToHour { get; set; }
 
-    public List<OrgnisationRelation>? Organisations { get; set; }
+    public List<OrganisationRelation>? Organisations { get; set; }
     //TODO husk booking og time intervals
 }

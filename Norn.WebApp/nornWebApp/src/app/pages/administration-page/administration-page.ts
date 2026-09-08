@@ -102,6 +102,16 @@ export class AdministrationPage implements OnInit {
            currentOrganisationIds : orgIds
         }),
         width: '800px',
+      }).afterClosed().subscribe(async (result) => {
+        if(result !== undefined){
+          await this.roomService.updateRoom(room);
+          this.updateList();
+        }
       })
+  }
+
+  async deleteRoom(id : number){
+    await this.roomService.deleteRoom(id);
+    await this.updateList();
   }
 }

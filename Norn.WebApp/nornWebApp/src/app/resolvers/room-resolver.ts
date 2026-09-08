@@ -5,8 +5,6 @@ import { inject } from '@angular/core';
 
 export const RoomResolver: ResolveFn<RoomModel[] | null> = (route, state) => {
   const roomService = inject(RoomService);
-
   const roomresult = roomService.getAllRooms();
-  console.log(roomresult);
   return roomresult;
 };
