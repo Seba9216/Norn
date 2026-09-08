@@ -12,7 +12,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CreateOrganisationModel } from '../../models/create-organisation-model';
 import { FormsModule } from '@angular/forms';
-import { Action } from '../../enums/action';
+import { CreateOrUpdateOrganisationData } from './create-or-update-organisation-data';
+import { RoomsRelation } from '../../models/rooms-relation';
+import { MatSelectModule } from '@angular/material/select';
+
 
 @Component({
   selector: 'app-create-or-update-organisation',
@@ -23,33 +26,38 @@ import { Action } from '../../enums/action';
     MatButtonModule,
     MatDialogContent,
     MatFormFieldModule,
+    MatSelectModule,
     MatInputModule,
     FormsModule,
   ],
   templateUrl: './create-or-update-organisation.html',
 })
 export class CreateOrUpdateOrganisation implements OnInit {
-  private actionToPerfom: Action = Action.Create;
   constructor(
-    @Inject(MAT_DIALOG_DATA) public organisationToUpdate: CreateOrganisationModel | null,
+    @Inject(MAT_DIALOG_DATA) public organisationToUpdate: CreateOrUpdateOrganisationData,
   ) {}
   ngOnInit(): void {
-    if (this.organisationToUpdate != null) {
-      this.organisation = this.organisationToUpdate;
+      
+      this.roomsToAdd = this.organisationToUpdate.rooms;
+    if (this.organisationToUpdate.organisationToUpdate != null) {
+      this.organisation = this.organisationToUpdate.organisationToUpdate;
+      if(this.organisationToUpdate.currentRoomsIds != null){
+      console.log(this.organisationToUpdate); 
+      this.organisation.roomIds = this.organisationToUpdate.currentRoomsIds;
+      }
     }
   }
   public organisation: CreateOrganisationModel = new CreateOrganisationModel({
     name: '',
     roomIds: [],
   });
-
+  public roomsToAdd : RoomsRelation[] = [];
   readonly dialogRef = inject(MatDialogRef<CreateOrUpdateOrganisation>);
   close() {
     this.dialogRef.close();
   }
   save() {
     this.dialogRef.close({
-      action: this.actionToPerfom,
       organisation: this.organisation,
     });
   }

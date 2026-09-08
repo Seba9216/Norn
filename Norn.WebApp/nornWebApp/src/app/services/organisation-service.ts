@@ -17,9 +17,15 @@ export class OrganisationService extends BaseService {
       this.api.post<boolean, CreateOrganisationModel>(this.apiPath, organisation),
     );
   }
+  public async getRelatedRooms(id: number) {
+    return firstValueFrom(this.api.get<number[]>(this.apiPath + '/Related/' + id));
+  }
 
   public async updateOrganisation(organisation: CreateOrganisationModel) {
     return firstValueFrom(this.api.put<any, CreateOrganisationModel>(this.apiPath, organisation));
+  }
+  public async deleteOrganisation(id: number) {
+    return firstValueFrom(this.api.delete<boolean>(this.apiPath + '/' + id));
   }
 
   public async getAllOrganisations() {

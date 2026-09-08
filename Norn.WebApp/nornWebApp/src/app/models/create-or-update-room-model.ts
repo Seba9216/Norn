@@ -1,7 +1,6 @@
 import { TimeLease } from '../enums/timeLease';
-import { OrganisationModel } from './organisation-model';
 
-export class RoomModel {
+export class CreateOrUpdateRoomModel {
   public id: number = 0;
   public name: string = '';
   public monday: boolean = true;
@@ -15,7 +14,9 @@ export class RoomModel {
   public increment: number = 0;
   public fromHour: number = 0;
   public toHour: number = 0;
-  constructor(data?: Partial<RoomModel>) {
+  public organisationIds: number[] = [];
+
+  constructor(data?: Partial<CreateOrUpdateRoomModel>) {
     Object.assign(this, data);
   }
 }

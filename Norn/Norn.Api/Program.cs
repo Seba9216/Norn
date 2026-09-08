@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Norn.Api.Security;
 using Norn.Repository;
+using Norn.Repository.Migrations;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,7 @@ builder.Services.AddScoped<IBearerTokenGenerator, BearerTokenGenerator>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IOrganisationRepository, OrganisationRepository>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>

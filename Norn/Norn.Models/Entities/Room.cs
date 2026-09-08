@@ -13,18 +13,28 @@ public class Room
     
     public List<TimeInterval> TimeIntervals { get; set; }
     
-    
-    public List<Booking> Bookings { get; set; }
-    
-    public int OpenTimeId { get; set; }
 
-    public OpenTime OpenTime { get; set; }
-    
+    public List<Booking> Bookings { get; set; }
+
+    public bool Monday { get; set; }
+    public bool Tuesday { get; set; }
+    public bool Wednesday { get; set; }
+    public bool Thursday { get; set; }
+    public bool Friday { get; set; }
+    public bool Saturday { get; set; }
+    public bool Sunday { get; set; }
+
+    [Range(0, 24)]
+    public byte? FromHour { get; set; }
+    [Range(0, 24)]
+    public byte? ToHour { get; set; }
+
+
     public TimeLease TimeLease { get; set; }
     
     [Range(0, 60)]
-    public byte? Increment { get; set; }
+    public byte Increment { get; set; }
     
-    public List<Organisation> Organisations { get; set; }
+    public List<OrganisationRoom> OrganisationRooms { get; set; }
 
 }

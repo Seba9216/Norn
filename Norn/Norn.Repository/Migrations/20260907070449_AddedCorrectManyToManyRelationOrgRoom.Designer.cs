@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Norn.Repository;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Norn.Repository.Migrations
 {
     [DbContext(typeof(NornContext))]
-    partial class NornContextModelSnapshot : ModelSnapshot
+    [Migration("20260907070449_AddedCorrectManyToManyRelationOrgRoom")]
+    partial class AddedCorrectManyToManyRelationOrgRoom
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,6 +75,46 @@ namespace Norn.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BookingStatuses");
+                });
+
+            modelBuilder.Entity("Norn.Models.Entities.OpenTime", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Friday")
+                        .HasColumnType("boolean");
+
+                    b.Property<byte?>("FromHour")
+                        .HasColumnType("smallint");
+
+                    b.Property<bool>("Monday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Saturday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Sunday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Thursday")
+                        .HasColumnType("boolean");
+
+                    b.Property<byte?>("ToHour")
+                        .HasColumnType("smallint");
+
+                    b.Property<bool>("Tuesday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Wednesday")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OpenTimes");
                 });
 
             modelBuilder.Entity("Norn.Models.Entities.Organisation", b =>
@@ -149,44 +192,22 @@ namespace Norn.Repository.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Friday")
-                        .HasColumnType("boolean");
-
-                    b.Property<byte?>("FromHour")
-                        .HasColumnType("smallint");
-
                     b.Property<byte?>("Increment")
                         .HasColumnType("smallint");
-
-                    b.Property<bool>("Monday")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("Saturday")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("Sunday")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("Thursday")
-                        .HasColumnType("boolean");
+                    b.Property<int>("OpenTimeId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("TimeLease")
                         .HasColumnType("integer");
 
-                    b.Property<byte?>("ToHour")
-                        .HasColumnType("smallint");
-
-                    b.Property<bool>("Tuesday")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("Wednesday")
-                        .HasColumnType("boolean");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("OpenTimeId");
 
                     b.ToTable("Rooms");
                 });
@@ -302,6 +323,17 @@ namespace Norn.Repository.Migrations
                     b.Navigation("Organisation");
 
                     b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("Norn.Models.Entities.Room", b =>
+                {
+                    b.HasOne("Norn.Models.Entities.OpenTime", "OpenTime")
+                        .WithMany()
+                        .HasForeignKey("OpenTimeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OpenTime");
                 });
 
             modelBuilder.Entity("Norn.Models.Entities.TimeInterval", b =>

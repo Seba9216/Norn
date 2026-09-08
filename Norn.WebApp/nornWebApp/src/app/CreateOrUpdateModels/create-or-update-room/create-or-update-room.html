@@ -1,0 +1,73 @@
+<h2 mat-dialog-title>Edit Room</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Room name</mat-label>
+    <input matInput type="text" [(ngModel)]="room.name" />
+  </mat-form-field>
+  <section class="d-flex flex-column gap-2">
+    <div>
+      <mat-label>Is open monday</mat-label>
+      <mat-checkbox [(ngModel)]="room.monday" />
+      <mat-label>Is open tuesday</mat-label>
+      <mat-checkbox [(ngModel)]="room.tuesday" />
+      <mat-label>Is open wensday</mat-label>
+      <mat-checkbox [(ngModel)]="room.wensday" />
+      <mat-label>Is open thursday</mat-label>
+      <mat-checkbox [(ngModel)]="room.thursday" />
+      <mat-label>Is open friday</mat-label>
+      <mat-checkbox [(ngModel)]="room.friday" />
+      <mat-label>Is open saturday</mat-label>
+      <mat-checkbox [(ngModel)]="room.saturday" />
+      <mat-label>Is open sunday</mat-label>
+      <mat-checkbox [(ngModel)]="room.sunday" />
+    </div>
+    <div>
+      <h5>Opening Hours</h5>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>From Hour</mat-label>
+        <input matInput type="number" min="0" max="24" [(ngModel)]="room.fromHour" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>To Hour</mat-label>
+        <input matInput type="number" min="0" max="24" [(ngModel)]="room.toHour" />
+      </mat-form-field>
+    </div>
+    <div>
+      <h5>Schedule settings</h5>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Increment</mat-label>
+        <input matInput type="number" min="0" max="60" [(ngModel)]="room.increment" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Schedule type</mat-label>
+        <mat-select [(ngModel)]="room.timeLease">
+          @for (option of timeLeaseOptions; track option.value) {
+            <mat-option [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field>
+<mat-label>Organisations</mat-label>
+  <mat-select [(ngModel)]="room.organisationIds" multiple>
+    @for (org of orgsToAdd; track org.id) {
+      <mat-option [value]="org.id">
+        {{ org.name }}
+      </mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+    </div>
+  </section>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Close</button>
+  <button mat-raised-button color="primary" (click)="save()">Save</button>
+</mat-dialog-actions>

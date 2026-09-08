@@ -5,6 +5,17 @@
     <mat-label>Organisation name</mat-label>
     <input matInput type="text" [(ngModel)]="organisation.name" />
   </mat-form-field>
+  <mat-form-field>
+    <mat-label>Rooms</mat-label>
+
+    <mat-select [(ngModel)]="organisation.roomIds" multiple>
+      @for (room of roomsToAdd; track room.id) {
+        <mat-option [value]="room.id">
+          {{ room.name }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

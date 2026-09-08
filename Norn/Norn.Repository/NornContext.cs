@@ -13,8 +13,8 @@ public class NornContext : DbContext
     public DbSet<TimeInterval> TimeIntervals { get; set; }
     public DbSet<BookingStatus> BookingStatuses { get; set; }
     public DbSet<Booking> Bookings { get; set; }
-    public DbSet<OpenTime> OpenTimes { get; set; }
     public DbSet<Organisation> Organisations { get; set; }
+    public DbSet<OrganisationRoom> OrganisationRoom { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
     }
@@ -30,15 +30,33 @@ public class NornContext : DbContext
     .HasIndex(x => x.RoleName)
     .IsUnique();
 
+        modelBuilder.Entity<OrganisationRoom>()
+            .HasKey(orgroom => new { orgroom.OrganisationId, orgroom.RoomId });
 
-        modelBuilder.Entity<Organisation>()
-            .HasMany(x => x.Rooms).WithMany(x => x.Organisations);
+        modelBuilder.Entity<OrganisationRoom>()
+            .HasOne(x => x.Organisation)
+            .WithMany(x => x.OrganisationRooms)
+            .HasForeignKey(x => x.OrganisationId);
+
+        modelBuilder.Entity<OrganisationRoom>()
+      .HasOne(x => x.Room)
+      .WithMany(x => x.OrganisationRooms)
+      .HasForeignKey(x => x.RoomId);
+
+        
+
+
         modelBuilder.Entity<Organisation>().HasIndex(x => x.Name).IsUnique();
+
+        modelBuilder.Entity<Organisation>().Navigation(x => x.OrganisationRooms).AutoInclude();
+
+
 
         modelBuilder.Entity<Booking>()
             .HasOne(x => x.BookingStatus)
             .WithMany(x => x.Bookings)
             .HasForeignKey(x => x.BookingStatusId);
+
 
         modelBuilder.Entity<Booking>()
             .HasOne(x => x.TimeInterval)
@@ -56,7 +74,9 @@ public class NornContext : DbContext
             .HasForeignKey(x => x.RoomId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        
+        modelBuilder.Entity<Organisation>().Navigation(x => x.OrganisationRooms).AutoInclude();
+        modelBuilder.Entity<Room>().Navigation(x => x.OrganisationRooms).AutoInclude();
+
 
         modelBuilder.Entity<Room>()
             .HasMany(x => x.Bookings)

@@ -7,6 +7,7 @@ import { userResolver } from './resolvers/user-resolver';
 import { authAdminGuard } from './services/guards/auth-admin-guard';
 import { AdministrationPage } from './pages/administration-page/administration-page';
 import { organisationResolver } from './resolvers/organisation-resolver';
+import { RoomResolver } from './resolvers/room-resolver';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,6 @@ export const routes: Routes = [
     path: 'administration',
     component: AdministrationPage,
     canActivate: [authAdminGuard],
-    resolve: { organisations: organisationResolver },
+    resolve: { organisations: organisationResolver, rooms: RoomResolver },
   },
 ];

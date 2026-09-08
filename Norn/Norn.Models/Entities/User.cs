@@ -11,7 +11,6 @@ public class User
     [ForeignKey("RoleId")]
     public required int RoleId { get; set; }
     public required string Password { get; set; }
-    public List<int>? BookingIds { get; set; }
     public List<Booking>? Bookings { get; set; }
 
 }

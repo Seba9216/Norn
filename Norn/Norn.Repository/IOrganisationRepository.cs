@@ -8,7 +8,9 @@ public interface IOrganisationRepository
 
     public Task<Models.Models.Organisation> UpdateOrganisation(CreateOrganisationRequest createOrganisationRequest);
 
-    public Task<Models.Models.Organisation> DeleteOrganisation(int id);
+    public Task<bool> DeleteOrganisation(int id);
 
-    public Task<List<Models.Models.Organisation>> GetAllOrganisations(); 
+    public Task<List<Models.Models.Organisation>> GetAllOrganisations();
+    public Task<List<int>> GetRelatedRooms(int id);
+
 }

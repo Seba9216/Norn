@@ -18,6 +18,7 @@ export class UserManagementPage implements OnInit {
   public users: UserModel[] | null = null;
 
   ngOnInit(): void {
+    console.log(this.route.snapshot);
     const users = this.route.snapshot.data['users'] as UserModel[];
     this.users = users;
   }
