@@ -43,12 +43,7 @@ public class NornContext : DbContext
       .WithMany(x => x.OrganisationRooms)
       .HasForeignKey(x => x.RoomId);
 
-        
-
-
         modelBuilder.Entity<Organisation>().HasIndex(x => x.Name).IsUnique();
-
-        modelBuilder.Entity<Organisation>().Navigation(x => x.OrganisationRooms).AutoInclude();
 
 
 
@@ -60,8 +55,8 @@ public class NornContext : DbContext
 
         modelBuilder.Entity<Booking>()
             .HasOne(x => x.TimeInterval)
-            .WithOne(x => x.Booking)
-            .HasForeignKey<Booking>(x => x.TimeIntervalId);
+            .WithMany(x => x.Bookings)
+            .HasForeignKey(x => x.TimeIntervalId);
 
         modelBuilder.Entity<Booking>()
             .HasOne(x => x.User)

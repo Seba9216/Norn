@@ -9,9 +9,11 @@ namespace Norn.Repository;
 public class RoomRepository : ListingRepo<Room>, IRoomRepository
 {
     NornContext _nornContext;
-    public RoomRepository(NornContext context) : base(context)
+    ITimeIntervalRepository _timeIntervalRepository;
+    public RoomRepository(NornContext context, ITimeIntervalRepository timeIntervalRepository) : base(context)
     {
         _nornContext = context;
+        _timeIntervalRepository = timeIntervalRepository;
     }
     public async Task<Models.Models.Room> CreateRoom(CreateRoomRequest request)
     {
@@ -35,6 +37,7 @@ public class RoomRepository : ListingRepo<Room>, IRoomRepository
 
 
         await _nornContext.SaveChangesAsync();
+        await _timeIntervalRepository.CreateTimeSchemaFromRoom(entity);
         if (request.OrganisationIds != null)
         {
             foreach (var org in request.OrganisationIds)
@@ -48,9 +51,10 @@ public class RoomRepository : ListingRepo<Room>, IRoomRepository
                         RoomId = entity.Id
                     });
                 }
-                await _nornContext.SaveChangesAsync();
             }
         }
+        await _nornContext.SaveChangesAsync();
+
         return RoomMapper.MapToModel(entity);
     }
     public async Task<Models.Models.Room> UpdateByRoom(UpdateRoomRequest request)
@@ -58,25 +62,26 @@ public class RoomRepository : ListingRepo<Room>, IRoomRepository
         var singularEntity = await GetByPrimaryKey(request.Id);
         if(singularEntity != null)
         {
-            singularEntity.Saturday = request.Saturday;
-            singularEntity.Sunday = request.Sunday;
-            singularEntity.Thursday = request.Thursday;
-            singularEntity.Wednesday = request.Wensday;
-            singularEntity.Tuesday = request.Tuesday;
-            singularEntity.Monday = request.Monday;
-            singularEntity.FromHour = request.FromHour;
-            singularEntity.ToHour = request.ToHour;
-            singularEntity.TimeLease = request.TimeLease;
-            singularEntity.Increment = request.Increment;
-            if(request.OrganisationIds != null)
+  
+            if (IsTimeSchemaDifferent(request, singularEntity))
+            {
+                SetRequestValuesToEntity(request, singularEntity);
+                await _timeIntervalRepository.UpdateTimesForRoom(singularEntity);
+            }
+            else
+            {
+                SetRequestValuesToEntity(request, singularEntity);
+            }
+
+            if (request.OrganisationIds != null)
             {
                 var currentOrgs = await GetAllRelatedOrgs(request.Id);
-                
+
                 var orgsToRemove = currentOrgs.Except(request.OrganisationIds).ToList();
-                foreach(var orgToRemove in orgsToRemove)
+                foreach (var orgToRemove in orgsToRemove)
                 {
                     var entityToRemove = await _nornContext.OrganisationRoom.SingleOrDefaultAsync(x => x.OrganisationId == request.Id && x.RoomId == orgToRemove);
-                    if(entityToRemove is not null)
+                    if (entityToRemove is not null)
                     {
                         _nornContext.OrganisationRoom.Remove(entityToRemove);
                     }
@@ -84,7 +89,7 @@ public class RoomRepository : ListingRepo<Room>, IRoomRepository
                 var orgsToAdd = request.OrganisationIds.Except(currentOrgs);
                 foreach (var orgToAdd in orgsToAdd)
                 {
-                    _nornContext.OrganisationRoom.Add(new OrganisationRoom { RoomId = singularEntity.Id, OrganisationId= orgToAdd });
+                    _nornContext.OrganisationRoom.Add(new OrganisationRoom { RoomId = singularEntity.Id, OrganisationId = orgToAdd });
 
                 }
                 await _nornContext.SaveChangesAsync();
@@ -96,7 +101,38 @@ public class RoomRepository : ListingRepo<Room>, IRoomRepository
             throw new InvalidOperationException("could not find room");
         }
 
-    } 
+    }
+
+    private static void SetRequestValuesToEntity(UpdateRoomRequest request, Room singularEntity)
+    {
+        singularEntity.Saturday = request.Saturday;
+        singularEntity.Sunday = request.Sunday;
+        singularEntity.Thursday = request.Thursday;
+        singularEntity.Wednesday = request.Wensday;
+        singularEntity.Tuesday = request.Tuesday;
+        singularEntity.Monday = request.Monday;
+        singularEntity.FromHour = request.FromHour;
+        singularEntity.ToHour = request.ToHour;
+        singularEntity.TimeLease = request.TimeLease;
+        singularEntity.Increment = request.Increment;
+        singularEntity.Name = request.Name;
+    }
+    /// <summary>
+    /// A check for if there is anything diffrent about the way the timeIntervals should be calculated for the room
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="singularEntity"></param>
+    /// <returns></returns>
+    private static bool IsTimeSchemaDifferent(UpdateRoomRequest request, Room singularEntity)
+    {
+        return singularEntity.Sunday != request.Sunday || singularEntity.Saturday != request.Saturday
+                        || singularEntity.Friday != request.Friday || request.Thursday != singularEntity.Thursday
+                        || singularEntity.Wednesday != request.Wensday || singularEntity.Tuesday != request.Tuesday ||
+                        singularEntity.Monday != request.Monday ||
+                        singularEntity.Increment != request.Increment || singularEntity.FromHour != request.FromHour ||
+                        singularEntity.ToHour != request.ToHour || singularEntity.TimeLease != request.TimeLease;
+    }
+
     public async Task<List<Models.Models.Room>> GetAllRooms()
     {
         var result = await GetAllEntitiesFromTable();

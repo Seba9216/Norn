@@ -30,7 +30,7 @@ export class LoginPage implements OnInit {
         email: this.userName,
         password: this.password,
       });
-      var result = await this.userService.createUser(userModel);
+      await this.userService.createUser(userModel);
     }
   }
   public async Login() {

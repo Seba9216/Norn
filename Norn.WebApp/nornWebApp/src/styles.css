@@ -7,7 +7,6 @@
   justify-content: center;
   align-items: center;
   min-height: 90vh;
-  background: linear-gradient(135deg, #2fb60d 0%, #f8f7f8ee 100%);
 }
 
 .card {
@@ -23,3 +22,40 @@
     margin-left: 0.5em;
   }
 }
+
+.week-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.week-title {
+  font-size: 18px;
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 20px;
+}
+
+.day-card {
+  min-height: 100px;
+}
+.selected{
+  
+  background: orange;
+  border-color: orange;
+}
+.selected:hover{
+  background: orange;
+  border-color: orange;
+}
+
+.empty-day {
+  color: #888;
+  font-style: italic;
+}
+
+

@@ -1,5 +1,12 @@
-﻿namespace Norn.Repository;
+﻿using Norn.Models.Entities;
 
-internal interface ITimeIntervalRepository
+namespace Norn.Repository;
+
+public interface ITimeIntervalRepository
 {
+    public Task<List<TimeInterval>> CreateTimeSchemaFromRoom(Room room);
+    public Task<List<Models.Models.TimeIntervalRelation>> GetRoomRelatedTimeIntervals(int roomId);
+
+    public Task<List<TimeInterval>> UpdateTimesForRoom(Room room);
+
 }

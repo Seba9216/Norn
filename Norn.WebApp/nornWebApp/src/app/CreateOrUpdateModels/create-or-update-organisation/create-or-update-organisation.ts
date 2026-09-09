@@ -16,7 +16,6 @@ import { CreateOrUpdateOrganisationData } from './create-or-update-organisation-
 import { RoomsRelation } from '../../models/rooms-relation';
 import { MatSelectModule } from '@angular/material/select';
 
-
 @Component({
   selector: 'app-create-or-update-organisation',
   standalone: true,
@@ -37,13 +36,12 @@ export class CreateOrUpdateOrganisation implements OnInit {
     @Inject(MAT_DIALOG_DATA) public organisationToUpdate: CreateOrUpdateOrganisationData,
   ) {}
   ngOnInit(): void {
-      
-      this.roomsToAdd = this.organisationToUpdate.rooms;
+    this.roomsToAdd = this.organisationToUpdate.rooms;
     if (this.organisationToUpdate.organisationToUpdate != null) {
       this.organisation = this.organisationToUpdate.organisationToUpdate;
-      if(this.organisationToUpdate.currentRoomsIds != null){
-      console.log(this.organisationToUpdate); 
-      this.organisation.roomIds = this.organisationToUpdate.currentRoomsIds;
+      if (this.organisationToUpdate.currentRoomsIds != null) {
+        console.log(this.organisationToUpdate);
+        this.organisation.roomIds = this.organisationToUpdate.currentRoomsIds;
       }
     }
   }
@@ -51,7 +49,7 @@ export class CreateOrUpdateOrganisation implements OnInit {
     name: '',
     roomIds: [],
   });
-  public roomsToAdd : RoomsRelation[] = [];
+  public roomsToAdd: RoomsRelation[] = [];
   readonly dialogRef = inject(MatDialogRef<CreateOrUpdateOrganisation>);
   close() {
     this.dialogRef.close();

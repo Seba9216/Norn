@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Norn.Repository;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Norn.Repository.Migrations
 {
     [DbContext(typeof(NornContext))]
-    partial class NornContextModelSnapshot : ModelSnapshot
+    [Migration("20260908122629_IncludeAutoForRoomOrg")]
+    partial class IncludeAutoForRoomOrg
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,7 +51,8 @@ namespace Norn.Repository.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.HasIndex("TimeIntervalId");
+                    b.HasIndex("TimeIntervalId")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -197,6 +201,9 @@ namespace Norn.Repository.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("BookingId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime>("From")
                         .HasColumnType("timestamp with time zone");
 
@@ -257,8 +264,8 @@ namespace Norn.Repository.Migrations
                         .IsRequired();
 
                     b.HasOne("Norn.Models.Entities.TimeInterval", "TimeInterval")
-                        .WithMany("Bookings")
-                        .HasForeignKey("TimeIntervalId")
+                        .WithOne("Booking")
+                        .HasForeignKey("Norn.Models.Entities.Booking", "TimeIntervalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -337,7 +344,7 @@ namespace Norn.Repository.Migrations
 
             modelBuilder.Entity("Norn.Models.Entities.TimeInterval", b =>
                 {
-                    b.Navigation("Bookings");
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("Norn.Models.Entities.User", b =>

@@ -14,6 +14,7 @@ export const routes: Routes = [
     path: 'home',
     component: HomePage,
     canActivate: [authGuard],
+    resolve: { organisations: organisationResolver, rooms: RoomResolver },
   },
   {
     path: '',

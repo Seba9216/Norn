@@ -35,17 +35,16 @@ import { OrganisationsRelation } from '../../models/organisations-relation';
 })
 export class CreateOrUpdateRoom implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateRoomData) {
-    if(data != null){ 
-      this.orgsToAdd = this.data.organisations; 
-  
+    if (data != null) {
+      this.orgsToAdd = this.data.organisations;
+
       if (data.request != null) {
-  
-      this.room = data.request;
-      if (data.currentOrganisationIds != null) {
-        this.room.organisationIds = this.data.currentOrganisationIds;
+        this.room = data.request;
+        if (data.currentOrganisationIds != null) {
+          this.room.organisationIds = this.data.currentOrganisationIds;
+        }
       }
     }
-  }
   }
 
   timeLeaseOptions = Object.keys(TimeLease)

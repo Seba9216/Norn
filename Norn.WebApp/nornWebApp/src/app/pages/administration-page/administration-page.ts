@@ -8,7 +8,6 @@ import { OrganisationModel } from '../../models/organisation-model';
 import { ActivatedRoute } from '@angular/router';
 import { CreateOrUpdateRoom } from '../../CreateOrUpdateModels/create-or-update-room/create-or-update-room';
 import { RoomService } from '../../services/room-service';
-import { RoomModel } from '../../models/room-model';
 import { CreateOrUpdateOrganisationData } from '../../CreateOrUpdateModels/create-or-update-organisation/create-or-update-organisation-data';
 import { CreateOrUpdateRoomModel } from '../../models/create-or-update-room-model';
 import { CreateOrUpdateRoomData } from '../../CreateOrUpdateModels/create-or-update-room/create-or-update-room-data';
@@ -22,16 +21,20 @@ import { CreateOrUpdateRoomData } from '../../CreateOrUpdateModels/create-or-upd
 export class AdministrationPage implements OnInit {
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
+  private organisationService = inject(OrganisationService);
+  private roomService = inject(RoomService);
+
 
   constructor(private dialog: MatDialog) {}
+
+  public organisations: OrganisationModel[] = [];
+  public rooms: CreateOrUpdateRoomModel[] = [];
+  
   ngOnInit(): void {
     this.organisations = this.route.snapshot.data['organisations'] as OrganisationModel[];
     this.rooms = this.route.snapshot.data['rooms'] as CreateOrUpdateRoomModel[];
   }
-  private organisationService = inject(OrganisationService);
-  private roomService = inject(RoomService);
-  public organisations: OrganisationModel[] = [];
-  public rooms: CreateOrUpdateRoomModel[] = [];
+
 
   async CreateOrganisation() {
     const dialogRef = this.dialog.open(CreateOrUpdateOrganisation, {
@@ -77,11 +80,11 @@ export class AdministrationPage implements OnInit {
   async createRoom() {
     const dialogRef = this.dialog
       .open(CreateOrUpdateRoom, {
-        data : new CreateOrUpdateRoomData({
-          request : null,
-          currentOrganisationIds : [],  
-          organisations : this.organisations,
-        }) ,
+        data: new CreateOrUpdateRoomData({
+          request: null,
+          currentOrganisationIds: [],
+          organisations: this.organisations,
+        }),
         width: '800px',
       })
       .afterClosed()
@@ -92,25 +95,28 @@ export class AdministrationPage implements OnInit {
         }
       });
   }
-  async updateRoom(room : CreateOrUpdateRoomModel){
+  async updateRoom(room: CreateOrUpdateRoomModel) {
     const orgIds = await this.roomService.getAllRelatedOrgs(room.id);
     console.log(orgIds);
-    const dialogRef = this.dialog.open(CreateOrUpdateRoom, {
-        data: new CreateOrUpdateRoomData ({
-           request : room,
-           organisations : this.organisations,
-           currentOrganisationIds : orgIds
+    const dialogRef = this.dialog
+      .open(CreateOrUpdateRoom, {
+        data: new CreateOrUpdateRoomData({
+          request: room,
+          organisations: this.organisations,
+          currentOrganisationIds: orgIds,
         }),
         width: '800px',
-      }).afterClosed().subscribe(async (result) => {
-        if(result !== undefined){
+      })
+      .afterClosed()
+      .subscribe(async (result) => {
+        if (result !== undefined) {
           await this.roomService.updateRoom(room);
           this.updateList();
         }
-      })
+      });
   }
 
-  async deleteRoom(id : number){
+  async deleteRoom(id: number) {
     await this.roomService.deleteRoom(id);
     await this.updateList();
   }
