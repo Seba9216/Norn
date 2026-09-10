@@ -135,7 +135,9 @@ public class RoomRepository : ListingRepo<Room>, IRoomRepository
 
     public async Task<List<Models.Models.Room>> GetAllRooms()
     {
-        var result = await GetAllEntitiesFromTable();
+        var result = await GetAllEntitiesFromTable(q =>
+            q.Include(o => o.OrganisationRooms)
+             .ThenInclude(or => or.Organisation));
         return result.Select(x =>
         {
             return RoomMapper.MapToModel(x);
@@ -143,14 +145,7 @@ public class RoomRepository : ListingRepo<Room>, IRoomRepository
     }
     public async Task<bool> DeleteRoom(int id)
     {
-        var foundEntity = await GetByPrimaryKey(id);
-        if (foundEntity is not null)
-        {
-            _nornContext.Remove(foundEntity);
-            await _nornContext.SaveChangesAsync();
-            return true;
-        }
-        return false;
+        return await RemoveByPrimaryKey(id);
     }
     public async Task<List<int>> GetAllRelatedOrgs(int id)
     {

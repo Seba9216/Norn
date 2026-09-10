@@ -15,6 +15,7 @@ public static class OrganisationMapper
             return new RoomRelation
             {
                 id = room.RoomId,
+                RoomName = room.Room.Name
             };
         }
         return null;

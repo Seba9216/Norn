@@ -43,12 +43,11 @@
 .day-card {
   min-height: 100px;
 }
-.selected{
-  
+.selected {
   background: orange;
   border-color: orange;
 }
-.selected:hover{
+.selected:hover {
   background: orange;
   border-color: orange;
 }
@@ -57,5 +56,3 @@
   color: #888;
   font-style: italic;
 }
-
-

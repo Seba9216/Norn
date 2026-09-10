@@ -41,8 +41,13 @@ export class HomePage implements OnInit {
   public rooms: CreateOrUpdateRoomModel[] = [];
   public currentRooms: CreateOrUpdateRoomModel[] = [];
   selectedOrganisationId: number | null = null;
-  selectedRoomId: number | null = null; 
-  selectedInterval : TimeInterval | null = null; 
+  selectedRoomId: number | null = null;
+  selectedInterval: TimeInterval | null = null;
+  timeIntervals: TimeInterval[] = [];
+  weeks: { start: Date; days: any[] }[] = [];
+  currentWeekIndex = 0;
+
+
   ngOnInit(): void {
     this.organisations = this.route.snapshot.data['organisations'] as OrganisationModel[];
     this.rooms = this.route.snapshot.data['rooms'] as CreateOrUpdateRoomModel[];
@@ -52,77 +57,60 @@ export class HomePage implements OnInit {
     const currentRoomsIds = await this.organisationService.getRelatedRooms(orgId);
     this.currentRooms = this.rooms.filter((room) => currentRoomsIds.some((id) => id === room.id));
   }
-  
-  allIntervals: TimeInterval[] = [];
-  weeks: { start: Date; days: any[] }[] = [];
-  currentWeekIndex = 0;
+
 
   async loadTimeIntervals(roomId: number) {
     const times = await this.timeIntervalService.GetTimeIntervalsRelatedToRoom(roomId);
 
-    this.allIntervals = times;
+    this.timeIntervals = times;
     this.buildWeeks();
   }
-  selectInterval(interval : TimeInterval){
-    console.log(interval);
-      this.selectedInterval = interval;
+  selectInterval(interval: TimeInterval) {
+    this.selectedInterval = interval;
   }
-  async MakeBooking(interval : TimeInterval){
-    
-  }
+  async MakeBooking(interval: TimeInterval) {}
 
   private buildWeeks() {
-    const groupedDays = new Map<string, TimeInterval[]>();
-
-    this.allIntervals.forEach((interval) => {
-      const date = new Date(interval.from);
-
-      // UTC date key: YYYY-MM-DD
-      const dateKey = date.toISOString().split('T')[0];
-
-      if (!groupedDays.has(dateKey)) {
-        groupedDays.set(dateKey, []);
-      }
-
-      groupedDays.get(dateKey)!.push(interval);
-    });
-
-    const allDates = [...groupedDays.keys()]
-      .map((d) => new Date(`${d}T00:00:00Z`))
-      .sort((a, b) => a.getTime() - b.getTime());
-
-    if (!allDates.length) {
-      return;
-    }
-
     const weekMap = new Map<string, any[]>();
 
-    allDates.forEach((date) => {
-      const monday = new Date(date);
-
-      const day = monday.getUTCDay();
+    this.timeIntervals.forEach((interval) => {
+      const date = new Date(interval.from);
+      const day = date.getUTCDay();
       const diff = day === 0 ? -6 : 1 - day;
 
+      const monday = new Date(date);
       monday.setUTCDate(monday.getUTCDate() + diff);
 
       const weekKey = monday.toISOString().split('T')[0];
+      const dateKey = date.toISOString().split('T')[0];
 
       if (!weekMap.has(weekKey)) {
         weekMap.set(weekKey, []);
       }
 
-      weekMap.get(weekKey)!.push({
-        date,
-        intervals: groupedDays.get(date.toISOString().split('T')[0]) ?? [],
-      });
+      let week = weekMap.get(weekKey)!;
+
+      let dayEntry = week.find((d) => d.date.toISOString().split('T')[0] === dateKey);
+
+      if (!dayEntry) {
+        dayEntry = {
+          date,
+          intervals: [],
+        };
+        week.push(dayEntry);
+      }
+
+      dayEntry.intervals.push(interval);
     });
 
-    console.log(weekMap);
+    this.weeks = [];
 
-    this.weeks = [...weekMap.entries()].map(([weekStart, days]) => ({
-      start: new Date(`${weekStart}T00:00:00Z`),
-      days,
-    }));
+    for (const [weekStart, days] of weekMap) {
+      this.weeks.push({
+        start: new Date(`${weekStart}T00:00:00Z`),
+        days,
+      });
+    }
   }
 
   get currentWeek() {

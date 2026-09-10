@@ -52,17 +52,7 @@ public class OrganisationRepository : ListingRepo<Organisation>, IOrganisationRe
 
     public async Task<bool> DeleteOrganisation(int id)
     {
-        try
-        {
-            var entity = await GetByPrimaryKey(id);
-            _nornContext.Remove(entity);
-            await _nornContext.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception e)
-        {
-            return false;
-        }
+        return await RemoveByPrimaryKey(id);
     }
     public async Task<Models.Models.Organisation> UpdateOrganisation(UpdateOrganisationRequest request)
     {
@@ -100,7 +90,9 @@ public class OrganisationRepository : ListingRepo<Organisation>, IOrganisationRe
 
     public async Task<List<Models.Models.Organisation>> GetAllOrganisations()
     {
-        var result = await GetAllEntitiesFromTable();
+        var result = await GetAllEntitiesFromTable(q =>
+            q.Include(o => o.OrganisationRooms)
+             .ThenInclude(or => or.Room));
 
         var resultAsModels = result.Select(x =>
         {

@@ -24,17 +24,15 @@ export class AdministrationPage implements OnInit {
   private organisationService = inject(OrganisationService);
   private roomService = inject(RoomService);
 
-
   constructor(private dialog: MatDialog) {}
 
   public organisations: OrganisationModel[] = [];
   public rooms: CreateOrUpdateRoomModel[] = [];
-  
+
   ngOnInit(): void {
     this.organisations = this.route.snapshot.data['organisations'] as OrganisationModel[];
     this.rooms = this.route.snapshot.data['rooms'] as CreateOrUpdateRoomModel[];
   }
-
 
   async CreateOrganisation() {
     const dialogRef = this.dialog.open(CreateOrUpdateOrganisation, {

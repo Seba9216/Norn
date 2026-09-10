@@ -21,10 +21,11 @@
           }
         </mat-select>
       </mat-form-field>
-      
     }
-    @if(selectedInterval){
-        <button class="btn btn-success mb-3 d-block" (click)="MakeBooking(selectedInterval)">Make booking request</button>
+    @if (selectedInterval) {
+      <button class="btn btn-success mb-3 d-block" (click)="MakeBooking(selectedInterval)">
+        Make booking request
+      </button>
     }
   </div>
   <div class="container-fluid p-3 w-80">
@@ -59,10 +60,11 @@
                 @if (day.intervals.length > 0) {
                   @for (interval of day.intervals; track interval.id) {
                     <button
-                    type="button"
-                    class="btn btn-primary"
-                    [class.selected]="selectedInterval?.from === interval.from"
-                    (click)="selectInterval(interval)">
+                      type="button"
+                      class="btn btn-primary"
+                      [class.selected]="selectedInterval?.from === interval.from"
+                      (click)="selectInterval(interval)"
+                    >
                       {{ interval.from | date: 'HH:mm' : 'UTC' }}
                       -
                       {{ interval.to | date: 'HH:mm' : 'UTC' }}

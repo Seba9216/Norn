@@ -70,7 +70,6 @@ public class NornContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Organisation>().Navigation(x => x.OrganisationRooms).AutoInclude();
-        modelBuilder.Entity<Room>().Navigation(x => x.OrganisationRooms).AutoInclude();
 
 
         modelBuilder.Entity<Room>()

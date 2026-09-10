@@ -3,7 +3,7 @@ using Norn.Models.Models.Requests;
 
 namespace Norn.Repository;
 
-public  interface IUserRepository
+public interface IUserRepository
 {
     public Task<Models.Models.User?> GetUserByEmail(string email);
     public Task<bool> CreateUser(Models.Models.User user);
