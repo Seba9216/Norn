@@ -8,6 +8,8 @@ import { authAdminGuard } from './services/guards/auth-admin-guard';
 import { AdministrationPage } from './pages/administration-page/administration-page';
 import { organisationResolver } from './resolvers/organisation-resolver';
 import { RoomResolver } from './resolvers/room-resolver';
+import { BookingPage } from './pages/booking-page/booking-page';
+import { bookingResolver } from './resolvers/booking-resolver';
 
 export const routes: Routes = [
   {
@@ -31,5 +33,11 @@ export const routes: Routes = [
     component: AdministrationPage,
     canActivate: [authAdminGuard],
     resolve: { organisations: organisationResolver, rooms: RoomResolver },
+  },
+  {
+    path: 'booking',
+    component: BookingPage,
+    canActivate: [authGuard],
+    resolve: { bookings: bookingResolver },
   },
 ];

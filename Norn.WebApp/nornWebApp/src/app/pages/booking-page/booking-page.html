@@ -1,0 +1,61 @@
+<div class="d-flex">
+  <div class="container-fluid p-3 w-100">
+      <ul class="list-group list-group-horizontal">
+          <li class="list-group-item">
+            Room
+        </li>
+        <li class="list-group-item">
+            From
+        </li>
+        <li class="list-group-item">
+            To
+        </li>
+        <li class="list-group-item">
+            User
+        </li>
+        <li class="list-group-item">
+            Status
+        </li>
+    </ul>
+    @for (booking of bookings; track booking.id) {
+      <ul class="list-group list-group-horizontal">
+        @if (booking.room; as room) {
+          <li class="list-group-item">
+            {{ room.roomName }}
+          </li>
+        }
+
+        @if (booking.timeInterval; as interval) {
+          <li class="list-group-item">
+            {{ interval.from | date:'dd/MM/yy HH:mm':'UTC' }}
+          </li>
+
+          <li class="list-group-item">
+            {{ interval.to | date:'dd/MM/yy HH:mm':'UTC' }}
+          </li>
+        }
+        @if (booking.user; as user) {
+          <li class="list-group-item">
+            {{ user.email }}
+          </li>
+        }
+        @if (booking.bookingStatus; as bookingStatus) {
+          <li class="list-group-item">
+            {{ bookingStatus.currentStatus }}
+          </li>
+        }
+        @if(isAdmin() && isBooked(booking)){
+        <button class="btn btn-success" (click)="ApproveBooking(booking)">
+        Approve booking request
+        </button>
+        }
+        @if(isCancelled(booking)){   
+        <button class="btn btn-danger" (click)="CancelBooking(booking)">
+        Cancel booking request
+        </button>
+    }
+      </ul>
+      
+    }
+  </div>
+</div>

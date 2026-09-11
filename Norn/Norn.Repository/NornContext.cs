@@ -26,6 +26,12 @@ public class NornContext : DbContext
             new Role { Id = 1, RoleName = "Admin" },
             new Role { Id = 2, RoleName = "User" }
         );
+        modelBuilder.Entity<BookingStatus>().HasData(
+            new BookingStatus { Id = 1, Status = "Awaiting" },
+            new BookingStatus { Id = 2, Status = "Confirmed" },
+            new BookingStatus { Id = 3, Status = "Cancelled" }
+            );
+
         modelBuilder.Entity<Role>()
     .HasIndex(x => x.RoleName)
     .IsUnique();

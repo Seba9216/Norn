@@ -135,7 +135,7 @@ public class RoomRepository : ListingRepo<Room>, IRoomRepository
 
     public async Task<List<Models.Models.Room>> GetAllRooms()
     {
-        var result = await GetAllEntitiesFromTable(q =>
+        var result = await GetAllEntities(q =>
             q.Include(o => o.OrganisationRooms)
              .ThenInclude(or => or.Organisation));
         return result.Select(x =>

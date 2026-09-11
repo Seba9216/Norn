@@ -2,7 +2,7 @@
 
 namespace Norn.Models.Entities;
 
-public class Organisation
+public class Organisation : IEntity
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }

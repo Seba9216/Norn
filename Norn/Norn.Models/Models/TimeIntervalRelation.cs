@@ -7,4 +7,6 @@ public class TimeIntervalRelation
     public DateTime From { get; set; }
     
     public DateTime To { get; set; }
+
+    public bool IsBooked { get; set; }
 }

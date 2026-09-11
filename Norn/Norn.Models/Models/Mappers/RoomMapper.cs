@@ -1,6 +1,4 @@
 ﻿
-using Norn.Models.Entities;
-
 namespace Norn.Models.Models.Mappers;
 
 public static class RoomMapper
@@ -30,6 +28,14 @@ public static class RoomMapper
             FromHour = room.FromHour,
             ToHour = room.ToHour,
             Organisations = relationsResult
+        };
+    }
+    public static Models.RoomRelation MapToRelationModel(Entities.Room room)
+    {
+        return new RoomRelation
+        {
+            id = room.Id,
+            RoomName = room.Name
         };
     }
     public static Models.OrganisationRelation? MapToModel(Entities.Organisation organisation)

@@ -29,4 +29,7 @@ export class UserService extends BaseService {
   public async deleteUser(email: string) {
     return firstValueFrom(this.api.delete(this.apiPath + '/' + email));
   }
+  public async getUserIdFromEmail(email: string) {
+    return firstValueFrom(this.api.get<number>(this.apiPath + '/' + email));
+  }
 }

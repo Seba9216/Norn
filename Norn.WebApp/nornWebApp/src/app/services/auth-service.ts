@@ -19,6 +19,14 @@ export class AuthService {
 
     return !this.jwtHelper.isTokenExpired(token);
   }
+  getEmail(): string | null {
+    const token = this.token;
+    if (!token) {
+      return null;
+    }
+    const decoded = this.jwtHelper.decodeToken(token);
+    return decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'];
+  }
 
   getRole(): string | null {
     const token = this.token;

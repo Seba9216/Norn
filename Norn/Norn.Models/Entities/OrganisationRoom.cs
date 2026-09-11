@@ -1,6 +1,6 @@
 ﻿namespace Norn.Models.Entities;
 
-public class OrganisationRoom
+public class OrganisationRoom 
 {
     public int RoomId { get; set; }
     public Room Room { get; set; }

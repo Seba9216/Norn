@@ -19,6 +19,10 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { BookingService } from '../../services/booking-service';
+import { CreateBookingRequest } from '../../models/create-booking-request';
+import { AuthService } from '../../services/auth-service';
+import { UserService } from '../../services/user-service';
 
 @Component({
   selector: 'app-home-page',
@@ -33,9 +37,12 @@ import { MatCardModule } from '@angular/material/card';
   templateUrl: './home-page.html',
 })
 export class HomePage implements OnInit {
+  private authService = inject(AuthService);
+  private userService = inject(UserService);
   private route = inject(ActivatedRoute);
   private organisationService = inject(OrganisationService);
   private timeIntervalService = inject(TimeIntervalService);
+  private bookingService = inject(BookingService);
 
   public organisations: OrganisationModel[] = [];
   public rooms: CreateOrUpdateRoomModel[] = [];
@@ -47,7 +54,6 @@ export class HomePage implements OnInit {
   weeks: { start: Date; days: any[] }[] = [];
   currentWeekIndex = 0;
 
-
   ngOnInit(): void {
     this.organisations = this.route.snapshot.data['organisations'] as OrganisationModel[];
     this.rooms = this.route.snapshot.data['rooms'] as CreateOrUpdateRoomModel[];
@@ -58,17 +64,31 @@ export class HomePage implements OnInit {
     this.currentRooms = this.rooms.filter((room) => currentRoomsIds.some((id) => id === room.id));
   }
 
-
   async loadTimeIntervals(roomId: number) {
     const times = await this.timeIntervalService.GetTimeIntervalsRelatedToRoom(roomId);
-
+    console.log(times);
     this.timeIntervals = times;
     this.buildWeeks();
   }
   selectInterval(interval: TimeInterval) {
     this.selectedInterval = interval;
   }
-  async MakeBooking(interval: TimeInterval) {}
+  async MakeBooking(interval: TimeInterval) {
+    const mail = this.authService.getEmail();
+    console.log(mail);
+    if (mail != null) {
+      const intervaldId = await this.timeIntervalService.GetIdByTimeAndRoomID(interval);
+      console.log(intervaldId);
+      const userId = await this.userService.getUserIdFromEmail(mail);
+      const bookingRequest = new CreateBookingRequest({
+        userId: userId,
+        timeIntervalId: intervaldId,
+        roomId: interval.roomId,
+      });
+
+      await this.bookingService.createBooking(bookingRequest);
+    }
+  }
 
   private buildWeeks() {
     const weekMap = new Map<string, any[]>();

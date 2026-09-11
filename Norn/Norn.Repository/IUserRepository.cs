@@ -10,5 +10,7 @@ public interface IUserRepository
     public Task<List<Models.Models.User>> GetAllUsers();
     public Task<Models.Models.User> UpdateRoleForUser(PromoteUserRequest userRequest);
     public Task<bool> DeleteUserByEmail(string email);
+    public Task<int?> GetIdByEmail(string email);
+
 
 }

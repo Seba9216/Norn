@@ -40,7 +40,6 @@ public class OrganisationController : Controller
     }
 
     [HttpGet("Related/{Id}")]
-    [Authorize(Roles = "Admin")]
     public async Task<List<int>> GetRelatedRooms([FromRoute]int id)
     {
         return await _organisationRepository.GetRelatedRooms(id);

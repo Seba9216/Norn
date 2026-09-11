@@ -90,7 +90,7 @@ public class OrganisationRepository : ListingRepo<Organisation>, IOrganisationRe
 
     public async Task<List<Models.Models.Organisation>> GetAllOrganisations()
     {
-        var result = await GetAllEntitiesFromTable(q =>
+        var result = await GetAllEntities(q =>
             q.Include(o => o.OrganisationRooms)
              .ThenInclude(or => or.Room));
 

@@ -34,9 +34,17 @@ public class UserRepository : ListingRepo<User>, IUserRepository
         return await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
     }
 
+    public async Task<int?> GetIdByEmail(string email)
+    {
+        var result = await GetEntityByEmail(email);
+        if (result is null) return null;
+        return result.Id;
+    }
+
+
     public async Task<List<Models.Models.User>> GetAllUsers()
     {
-        var result = await GetAllEntitiesFromTable();
+        var result = await GetAllEntities();
         var resultAsModels = result.Select(x =>
         {
             var role = _context.Roles.Single(entity => entity.Id == x.RoleId);

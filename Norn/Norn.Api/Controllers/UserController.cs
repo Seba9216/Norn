@@ -35,7 +35,13 @@ public class UserController : Controller
         });
     }
 
-
+    [HttpGet("{email}")]
+    public async Task<IActionResult> GetUserIdByEmail([FromRoute]string email)
+    {
+        var result = await _userRepository.GetIdByEmail(email);
+        if (result is null) return BadRequest();
+        return Ok(result);
+    }
 
     [HttpPost]
     public async Task<IActionResult> CreateUser(LoginRequest request)

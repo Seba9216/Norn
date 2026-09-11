@@ -59,16 +59,24 @@
               <mat-card-content>
                 @if (day.intervals.length > 0) {
                   @for (interval of day.intervals; track interval.id) {
-                    <button
-                      type="button"
-                      class="btn btn-primary"
-                      [class.selected]="selectedInterval?.from === interval.from"
-                      (click)="selectInterval(interval)"
-                    >
-                      {{ interval.from | date: 'HH:mm' : 'UTC' }}
-                      -
-                      {{ interval.to | date: 'HH:mm' : 'UTC' }}
-                    </button>
+                    @if (interval.isBooked) {
+                      <button type="button" class="btn btn-danger" disabled>
+                        {{ interval.from | date: 'HH:mm' : 'UTC' }}
+                        -
+                        {{ interval.to | date: 'HH:mm' : 'UTC' }}
+                      </button>
+                    } @else {
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        [class.selected]="selectedInterval?.from === interval.from"
+                        (click)="selectInterval(interval)"
+                      >
+                        {{ interval.from | date: 'HH:mm' : 'UTC' }}
+                        -
+                        {{ interval.to | date: 'HH:mm' : 'UTC' }}
+                      </button>
+                    }
                     <p></p>
                   }
                 } @else {

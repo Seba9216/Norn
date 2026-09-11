@@ -14,4 +14,11 @@ export class TimeIntervalService extends BaseService {
   public async GetTimeIntervalsRelatedToRoom(roomId: number) {
     return firstValueFrom(this.api.get<TimeInterval[]>(this.apiPath + '/' + roomId));
   }
+  public async GetIdByTimeAndRoomID(timeInterval: TimeInterval) {
+    return firstValueFrom(
+      this.api.get<number>(
+        this.apiPath + '/' + timeInterval.roomId + '/' + timeInterval.from + '/' + timeInterval.to,
+      ),
+    );
+  }
 }

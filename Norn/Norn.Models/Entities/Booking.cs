@@ -2,7 +2,7 @@
 
 namespace Norn.Models.Entities;
 
-public class Booking
+public class Booking : IEntity
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }

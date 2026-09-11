@@ -107,9 +107,31 @@ public class TimeIntervalRepository : ListingRepo<TimeInterval>, ITimeIntervalRe
         await _nornContext.AddRangeAsync(intervals);
         return intervals;
     }
+    public async Task<int?> GetIdFromTimeAndRoomId(DateTime from, DateTime to, int roomId)
+    {
+        var result = await _nornContext.TimeIntervals.SingleOrDefaultAsync(x => x.RoomId == roomId && x.From == from && x.To == to);
+        if (result is not null)
+        {
+            return result.Id;
+        }
+        return null;
+    }
+    public async Task<bool> DoesTimeIntervalHaveBooking(int id)
+    {
+        var found = await GetByPrimaryKey(id, x => x.Include(x => x.Bookings));
+        if(found is null || found.Bookings is null)
+        {
+            throw new InvalidOperationException("No timeInterval");
+        }
+        if (found.Bookings is not null)
+        {
+            return found.Bookings.Any(x => x.BookingStatusId == 2);
+        }
+        return false;
+    }
     public async Task<List<Models.Models.TimeIntervalRelation>> GetRoomRelatedTimeIntervals(int roomId)
     {
-         return await _nornContext.TimeIntervals.Where(x => x.RoomId == roomId).Select(x => TimeIntervalMapper.MapToModel(x)).ToListAsync();
+         return await _nornContext.TimeIntervals.Include(x => x.Bookings).Where(x => x.RoomId == roomId).Select(x => TimeIntervalMapper.MapToModel(x)).ToListAsync();
     } 
 
     private bool IsValidDay(Room room, DateTime date)

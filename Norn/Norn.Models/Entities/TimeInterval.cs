@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Norn.Models.Entities;
 
-public class TimeInterval
+public class TimeInterval : IEntity
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Norn.Models.Entities;
 
-public class Role
+public class Role : IEntity
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }

@@ -20,7 +20,6 @@ public class Tests
 
         _context.Users.Add(new Norn.Models.Entities.User
         {
-
             Email = "IamBrutus@CesarRules.com",
             Password = "IhateCarthago",
             Id = 1,

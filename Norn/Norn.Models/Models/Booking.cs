@@ -1,9 +1,12 @@
-﻿namespace Norn.Models.Models;
+﻿using Norn.Models.Entities;
 
-internal class Booking
+namespace Norn.Models.Models;
+
+public class Booking
 {
     public int Id { get; set; }
-    public User User { get; set;  }
+    public UserRelation User { get; set;  }
     public RoomRelation Room { get; set; }
     public TimeIntervalRelation TimeInterval { get; set; }
+    public BookingStatusRelation BookingStatus { get; set; }
 }
