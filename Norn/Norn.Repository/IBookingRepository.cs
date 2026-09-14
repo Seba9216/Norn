@@ -10,5 +10,6 @@ public interface IBookingRepository
     public Task<Models.Models.Booking?> ApproveBookingById(int id);
     public Task<Models.Models.Booking?> CancelBookingById(int id);
 
+    public Task<List<Models.Models.Booking>> GetAllBookingsForUser(string email); 
 
 }

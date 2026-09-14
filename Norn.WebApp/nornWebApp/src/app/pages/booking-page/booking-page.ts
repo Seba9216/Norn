@@ -4,10 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { BookingService } from '../../services/booking-service';
 import { CommonModule } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+
 
 @Component({
   selector: 'app-booking-page',
-  imports: [CommonModule],
+  imports: [CommonModule,MatTableModule],
   templateUrl: './booking-page.html',
 })
 export class BookingPage implements OnInit {
@@ -15,11 +17,21 @@ export class BookingPage implements OnInit {
   authService = inject(AuthService);
   bookingService = inject(BookingService);
   cdr = inject(ChangeDetectorRef);
+  public displayedColumns = [
+'room',
+'from',
+'to',
+'user',
+'status',
+'actions'
+];
+
 
   public bookings: BookingModel[] = [];
   async ngOnInit() {
     this.bookings = this.route.snapshot.data['bookings'] as BookingModel[];
   }
+
 
   isAdmin(): boolean {
     return this.authService.isAdministrator();
@@ -28,7 +40,7 @@ export class BookingPage implements OnInit {
     return booking.bookingStatus?.currentStatus === "Awaiting"
   }
   isCancelled(booking : BookingModel) : boolean{
-    return booking.bookingStatus?.currentStatus !== "Cancelled"
+    return booking.bookingStatus?.currentStatus === "Cancelled"
   }
   async ApproveBooking(booking : BookingModel){
     

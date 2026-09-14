@@ -26,6 +26,24 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - "4200:4200" 
+  rabbitmq:
+   env_file : 
+    - ../.env
+   image: rabbitmq:4.3.5-management
+   container_name: nornrabbit
+   ports:
+     - "5672:5672"
+     - "15672:15672"
+  norn.emailservice:
+    env_file : 
+    - ../.env
+    image: ${DOCKER_REGISTRY-}nornemailservice
+    build:
+      context: .
+      dockerfile: Norn.EmailService/Dockerfile
+    depends_on:
+      - rabbitmq
+
 
 volumes:
   postgres_data:

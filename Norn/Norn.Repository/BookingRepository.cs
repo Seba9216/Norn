@@ -31,6 +31,11 @@ public class BookingRepository : ListingRepo<Booking>, IBookingRepository
         var entitesAsModel = entities.Select(x => BookingMapper.MapToModel(x)).ToList();
         return entitesAsModel;
     }
+    public async Task<List<Models.Models.Booking>> GetAllBookingsForUser(string email)
+    {
+        var AllBookings = await GetAllBookings();
+        return AllBookings.Where(x => x.User.Email == email).ToList();
+    }
 
     public async Task<Models.Models.Booking?> ApproveBookingById(int id)
     {

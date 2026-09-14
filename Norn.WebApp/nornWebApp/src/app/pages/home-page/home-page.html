@@ -55,7 +55,6 @@
                   {{ day.date | date: 'EEEE' : 'UTC' }}
                 </mat-card-subtitle>
               </mat-card-header>
-
               <mat-card-content>
                 @if (day.intervals.length > 0) {
                   @for (interval of day.intervals; track interval.id) {

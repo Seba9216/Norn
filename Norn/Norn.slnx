@@ -5,7 +5,9 @@
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
+  <Project Path="Infrastructure/Infrastructure.csproj" Id="edadca67-fc19-4d9d-9aff-f5ba981530a6" />
   <Project Path="Norn.Api/Norn.Api.csproj" />
+  <Project Path="Norn.EmailService/Norn.EmailService.csproj" Id="2234bc7a-02a3-4b85-81cd-1952bedd645a" />
   <Project Path="Norn.Models/Norn.Models.csproj" />
   <Project Path="Norn.Repository/Norn.Repository.csproj" />
 </Solution>

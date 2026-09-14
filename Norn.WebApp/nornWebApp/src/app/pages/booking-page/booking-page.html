@@ -1,61 +1,72 @@
 <div class="d-flex">
   <div class="container-fluid p-3 w-100">
-      <ul class="list-group list-group-horizontal">
-          <li class="list-group-item">
-            Room
-        </li>
-        <li class="list-group-item">
-            From
-        </li>
-        <li class="list-group-item">
-            To
-        </li>
-        <li class="list-group-item">
-            User
-        </li>
-        <li class="list-group-item">
-            Status
-        </li>
-    </ul>
-    @for (booking of bookings; track booking.id) {
-      <ul class="list-group list-group-horizontal">
-        @if (booking.room; as room) {
-          <li class="list-group-item">
-            {{ room.roomName }}
-          </li>
+<table mat-table [dataSource]="bookings">
+
+  <ng-container matColumnDef="room">
+    <th mat-header-cell *matHeaderCellDef>Room</th>
+    <td mat-cell *matCellDef="let booking">
+      {{ booking.room?.roomName }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="from">
+    <th mat-header-cell *matHeaderCellDef>From</th>
+    <td mat-cell *matCellDef="let booking">
+      {{ booking.timeInterval?.from | date:'dd/MM/yy HH:mm':'UTC' }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="to">
+    <th mat-header-cell *matHeaderCellDef>To</th>
+    <td mat-cell *matCellDef="let booking">
+      {{ booking.timeInterval?.to | date:'dd/MM/yy HH:mm':'UTC' }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="user">
+    <th mat-header-cell *matHeaderCellDef>User</th>
+    <td mat-cell *matCellDef="let booking">
+      {{ booking.user?.email }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef>Status</th>
+    <td mat-cell *matCellDef="let booking">
+      {{ booking.bookingStatus?.currentStatus }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let booking">
+
+      <div class="d-flex gap-2">
+
+        @if (isAdmin() && isBooked(booking)) {
+          <button
+            class="btn btn-success"
+            (click)="ApproveBooking(booking)">
+            Approve
+          </button>
         }
 
-        @if (booking.timeInterval; as interval) {
-          <li class="list-group-item">
-            {{ interval.from | date:'dd/MM/yy HH:mm':'UTC' }}
-          </li>
+        @if (!isCancelled(booking)) {
+          <button
+            class="btn btn-danger"
+            (click)="CancelBooking(booking)">
+            Cancel
+          </button>
+        }
 
-          <li class="list-group-item">
-            {{ interval.to | date:'dd/MM/yy HH:mm':'UTC' }}
-          </li>
-        }
-        @if (booking.user; as user) {
-          <li class="list-group-item">
-            {{ user.email }}
-          </li>
-        }
-        @if (booking.bookingStatus; as bookingStatus) {
-          <li class="list-group-item">
-            {{ bookingStatus.currentStatus }}
-          </li>
-        }
-        @if(isAdmin() && isBooked(booking)){
-        <button class="btn btn-success" (click)="ApproveBooking(booking)">
-        Approve booking request
-        </button>
-        }
-        @if(isCancelled(booking)){   
-        <button class="btn btn-danger" (click)="CancelBooking(booking)">
-        Cancel booking request
-        </button>
-    }
-      </ul>
-      
-    }
+      </div>
+
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+</table>
   </div>
 </div>
