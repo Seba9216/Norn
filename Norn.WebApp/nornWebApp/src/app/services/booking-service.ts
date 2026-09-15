@@ -23,11 +23,10 @@ export class BookingService extends BaseService {
   public async GetAllBookingsForUser(email: string) {
     return firstValueFrom(this.api.get<BookingModel[]>(this.apiPath + '/ByMail/' + email));
   }
-  public async approveBookingRequest(Id : number){
-    return firstValueFrom(this.api.put<BookingModel,number>(this.apiPath + '/approve' ,Id))
+  public async approveBookingRequest(Id: number) {
+    return firstValueFrom(this.api.put<BookingModel, number>(this.apiPath + '/approve', Id));
   }
-  public async cancelBookingRequest(Id : number){
-        return firstValueFrom(this.api.put<BookingModel,number>(this.apiPath + '/cancel' ,Id))
-
+  public async cancelBookingRequest(Id: number) {
+    return firstValueFrom(this.api.put<BookingModel, number>(this.apiPath + '/cancel', Id));
   }
 }

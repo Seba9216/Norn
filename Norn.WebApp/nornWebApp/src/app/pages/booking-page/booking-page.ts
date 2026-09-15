@@ -6,10 +6,9 @@ import { BookingService } from '../../services/booking-service';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 
-
 @Component({
   selector: 'app-booking-page',
-  imports: [CommonModule,MatTableModule],
+  imports: [CommonModule, MatTableModule],
   templateUrl: './booking-page.html',
 })
 export class BookingPage implements OnInit {
@@ -17,44 +16,38 @@ export class BookingPage implements OnInit {
   authService = inject(AuthService);
   bookingService = inject(BookingService);
   cdr = inject(ChangeDetectorRef);
-  public displayedColumns = [
-'room',
-'from',
-'to',
-'user',
-'status',
-'actions'
-];
 
+  public displayedColumns = ['room', 'from', 'to', 'user', 'status', 'actions'];
 
   public bookings: BookingModel[] = [];
   async ngOnInit() {
     this.bookings = this.route.snapshot.data['bookings'] as BookingModel[];
   }
 
-
   isAdmin(): boolean {
     return this.authService.isAdministrator();
   }
-  isBooked(booking : BookingModel) : boolean{
-    return booking.bookingStatus?.currentStatus === "Awaiting"
+  isBooked(booking: BookingModel): boolean {
+    return booking.bookingStatus?.currentStatus === 'Awaiting';
   }
-  isCancelled(booking : BookingModel) : boolean{
-    return booking.bookingStatus?.currentStatus === "Cancelled"
+  isCancelled(booking: BookingModel): boolean {
+    return booking.bookingStatus?.currentStatus === 'Cancelled';
   }
-  async ApproveBooking(booking : BookingModel){
-    
-    await this.bookingService.approveBookingRequest(booking.id)
+  async ApproveBooking(booking: BookingModel) {
+    await this.bookingService.approveBookingRequest(booking.id);
     await this.updateList();
   }
-  async CancelBooking(booking : BookingModel){
-    await this.bookingService.cancelBookingRequest(booking.id)
+  async CancelBooking(booking: BookingModel) {
+    await this.bookingService.cancelBookingRequest(booking.id);
     await this.updateList();
   }
-   async updateList() {
-    this.bookings = await this.bookingService.GetAllBookings();
+  async updateList() {
+    if (this.isAdmin()) {
+      this.bookings = await this.bookingService.GetAllBookings();
+    } else {
+      const email = this.authService.getEmail() as string;
+      this.bookings = await this.bookingService.GetAllBookingsForUser(email);
+    }
     this.cdr.detectChanges();
-
   }
-  
 }

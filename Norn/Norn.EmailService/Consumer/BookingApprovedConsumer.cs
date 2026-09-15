@@ -1,14 +1,12 @@
 ﻿using Infrastructure.Connections;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Newtonsoft.Json;
-using Norn.EmailService.Mail;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 
 namespace Norn.EmailService.Consumer;
 
-public class BookingApprovedConsumer : BackgroundService, IBookingApprovedConsumer
+public class BookingApprovedConsumer : BackgroundService
 {
     IConfiguration _configuration;
     private string _mailQue;
