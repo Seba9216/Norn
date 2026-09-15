@@ -52,6 +52,14 @@
           "defaultConfiguration": "production"
         },
         "serve": {
+          "options": {
+            "allowedHosts": [
+          "nnswingers.com",
+      "www.nnswingers.com",
+      "localhost"
+            ]
+
+          },  
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
