@@ -35,7 +35,6 @@ import { DisplayMessage } from '../../sharedComponents/display-message/display-m
     MatPaginatorModule,
     MatButtonModule,
     MatCardModule,
-    
   ],
   templateUrl: './home-page.html',
 })
@@ -87,12 +86,12 @@ export class HomePage implements OnInit {
         timeIntervalId: intervaldId,
         roomId: interval.roomId,
       });
-      try{
-      await this.bookingService.createBooking(bookingRequest);
-      }catch{
-              this.dialog.open(DisplayMessage, {
-                  data : 'Could not make booking' 
-                });
+      try {
+        await this.bookingService.createBooking(bookingRequest);
+      } catch {
+        this.dialog.open(DisplayMessage, {
+          data: 'Could not make booking',
+        });
       }
     }
   }

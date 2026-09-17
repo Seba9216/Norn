@@ -32,18 +32,14 @@ export class LoginPage implements OnInit {
         email: this.userName,
         password: this.password,
       });
-      try{
-
-      
-      const answer = await this.userService.createUser(userModel);
-      }catch{
+      try {
+        const answer = await this.userService.createUser(userModel);
+      } catch {
         this.dialog.open(DisplayMessage, {
-          data : 'Could not create user' 
+          data: 'Could not create user',
         });
-        console.log("shown"); 
-
+        console.log('shown');
       }
-              
     }
   }
   public async Login() {

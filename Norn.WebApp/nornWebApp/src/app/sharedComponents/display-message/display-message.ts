@@ -5,11 +5,9 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-display-message',
-  imports: [MatDialogContent,CommonModule,MatInputModule],
+  imports: [MatDialogContent, CommonModule, MatInputModule],
   templateUrl: './display-message.html',
 })
 export class DisplayMessage {
-   constructor(
-    @Inject(MAT_DIALOG_DATA) public messageToDisplay: string,
-  ) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public messageToDisplay: string) {}
 }
