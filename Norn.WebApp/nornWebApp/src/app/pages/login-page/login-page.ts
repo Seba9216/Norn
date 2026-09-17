@@ -5,6 +5,8 @@ import { UserService } from '../../services/user-service';
 import { UserModel } from '../../models/user-model';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
+import { MatDialog } from '@angular/material/dialog';
+import { DisplayMessage } from '../../sharedComponents/display-message/display-message';
 
 @Component({
   selector: 'app-login-page',
@@ -17,7 +19,7 @@ export class LoginPage implements OnInit {
   private authService = inject(AuthService);
   public userName = '';
   public password = '';
-
+  constructor(private dialog: MatDialog) {}
   ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/home']);
@@ -30,7 +32,18 @@ export class LoginPage implements OnInit {
         email: this.userName,
         password: this.password,
       });
-      await this.userService.createUser(userModel);
+      try{
+
+      
+      const answer = await this.userService.createUser(userModel);
+      }catch{
+        this.dialog.open(DisplayMessage, {
+          data : 'Could not create user' 
+        });
+        console.log("shown"); 
+
+      }
+              
     }
   }
   public async Login() {

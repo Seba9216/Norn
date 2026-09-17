@@ -43,6 +43,17 @@ services:
       dockerfile: Norn.EmailService/Dockerfile
     depends_on:
       - rabbitmq
+  norn.signalRService:
+    env_file : 
+    - ../.env
+    image: ${DOCKER_REGISTRY-}nornsignalrservice
+    build:
+      context: .
+      dockerfile: Norn.SignaRService/Dockerfile
+    ports:
+      - "8008:8008" 
+    depends_on:
+      - rabbitmq
 
 
 volumes:

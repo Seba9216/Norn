@@ -23,6 +23,8 @@ import { BookingService } from '../../services/booking-service';
 import { CreateBookingRequest } from '../../models/create-booking-request';
 import { AuthService } from '../../services/auth-service';
 import { UserService } from '../../services/user-service';
+import { MatDialog } from '@angular/material/dialog';
+import { DisplayMessage } from '../../sharedComponents/display-message/display-message';
 
 @Component({
   selector: 'app-home-page',
@@ -33,6 +35,7 @@ import { UserService } from '../../services/user-service';
     MatPaginatorModule,
     MatButtonModule,
     MatCardModule,
+    
   ],
   templateUrl: './home-page.html',
 })
@@ -47,12 +50,14 @@ export class HomePage implements OnInit {
   public organisations: OrganisationModel[] = [];
   public rooms: CreateOrUpdateRoomModel[] = [];
   public currentRooms: CreateOrUpdateRoomModel[] = [];
+
   selectedOrganisationId: number | null = null;
   selectedRoomId: number | null = null;
   selectedInterval: TimeInterval | null = null;
   timeIntervals: TimeInterval[] = [];
   weeks: { start: Date; days: any[] }[] = [];
   currentWeekIndex = 0;
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.organisations = this.route.snapshot.data['organisations'] as OrganisationModel[];
@@ -66,7 +71,6 @@ export class HomePage implements OnInit {
 
   async loadTimeIntervals(roomId: number) {
     const times = await this.timeIntervalService.GetTimeIntervalsRelatedToRoom(roomId);
-    console.log(times);
     this.timeIntervals = times;
     this.buildWeeks();
   }
@@ -75,18 +79,21 @@ export class HomePage implements OnInit {
   }
   async MakeBooking(interval: TimeInterval) {
     const mail = this.authService.getEmail();
-    console.log(mail);
     if (mail != null) {
       const intervaldId = await this.timeIntervalService.GetIdByTimeAndRoomID(interval);
-      console.log(intervaldId);
       const userId = await this.userService.getUserIdFromEmail(mail);
       const bookingRequest = new CreateBookingRequest({
         userId: userId,
         timeIntervalId: intervaldId,
         roomId: interval.roomId,
       });
-
+      try{
       await this.bookingService.createBooking(bookingRequest);
+      }catch{
+              this.dialog.open(DisplayMessage, {
+                  data : 'Could not make booking' 
+                });
+      }
     }
   }
 

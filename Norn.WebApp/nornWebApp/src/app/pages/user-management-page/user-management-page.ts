@@ -1,10 +1,8 @@
 import { ChangeDetectorRef, Component, inject, OnInit, runInInjectionContext } from '@angular/core';
 import { UserModel } from '../../models/user-model';
 import { UserService } from '../../services/user-service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { PromoteUserRequest } from '../../models/promote-user-request';
-import { email } from '@angular/forms/signals';
-
 @Component({
   selector: 'app-user-management-page',
   imports: [],

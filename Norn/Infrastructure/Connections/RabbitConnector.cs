@@ -8,11 +8,11 @@ namespace Infrastructure.Connections;
 public class RabbitConnector : IRabbitConnector
 {
     IConfiguration _configuration;
-    private string _mailQue;
+    private string _mailExchange;
     public RabbitConnector(IConfiguration configuration)
     {
         _configuration = configuration;
-        _mailQue = _configuration["RABBITMQ_EMAIL_CHANNEL"];
+        _mailExchange = _configuration["RABBITMQ_EMAIL_CHANNEL"];
     }
     public async Task<IConnection?> GetRabbitConnection()
     {
@@ -27,20 +27,16 @@ public class RabbitConnector : IRabbitConnector
     public async Task PublishMessageQueForEmailService(object message)
     {
         var channel = await GetEmailChannel();
-        await channel.ExchangeDeclareAsync(_mailQue, ExchangeType.Fanout);
-        await channel.QueueDeclareAsync(_mailQue, true, false, false, null);
-        await channel.QueueBindAsync(queue: _mailQue,exchange: _mailQue,routingKey: string.Empty);
+        await channel.ExchangeDeclareAsync(_mailExchange, ExchangeType.Fanout);
         var Serilazied = JsonConvert.SerializeObject(message);
         var messageAsBytes = Encoding.UTF8.GetBytes(Serilazied);
-
-        await channel.BasicPublishAsync(_mailQue, string.Empty, messageAsBytes);
+        await channel.BasicPublishAsync(_mailExchange, string.Empty, messageAsBytes);
     }
   
 
     public async Task<IChannel> GetEmailChannel()
     {
         var connection = await GetRabbitConnection();
-        var emailQue = _mailQue;
         var channel = await connection.CreateChannelAsync();
         return channel;
     }

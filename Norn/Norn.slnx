@@ -10,4 +10,5 @@
   <Project Path="Norn.EmailService/Norn.EmailService.csproj" Id="2234bc7a-02a3-4b85-81cd-1952bedd645a" />
   <Project Path="Norn.Models/Norn.Models.csproj" />
   <Project Path="Norn.Repository/Norn.Repository.csproj" />
+  <Project Path="Norn.SignaRService/Norn.SignaRService.csproj" Id="d2ee0909-64fb-4f5c-af72-a10b41d801b3" />
 </Solution>

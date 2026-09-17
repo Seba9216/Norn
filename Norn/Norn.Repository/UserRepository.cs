@@ -31,11 +31,12 @@ public class UserRepository : ListingRepo<User>, IUserRepository
 
     private async Task<User?> GetEntityByEmail(string email)
     {
-        return await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
+        return await _context.Users.SingleOrDefaultAsync(x => x.Email == email.ToLower());
     }
 
     public async Task<int?> GetIdByEmail(string email)
     {
+        email = email.ToLower();
         var result = await GetEntityByEmail(email);
         if (result is null) return null;
         return result.Id;
@@ -60,6 +61,7 @@ public class UserRepository : ListingRepo<User>, IUserRepository
     /// <returns></returns>
     public async Task<bool> CreateUser(Models.Models.User user)
     {
+        user.Email = user.Email.ToLower();
         var role = await _context.Roles.SingleAsync(x => x.RoleName == user.Role);
         var isThereAnyUser = await _context.Users.AnyAsync();
         role = isThereAnyUser ? role : await _context.Roles.SingleAsync(x => x.RoleName == "Admin");

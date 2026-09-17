@@ -54,7 +54,7 @@ public class UserController : Controller
         });
         if (result) return Ok(result);
 
-        return BadRequest();
+        return BadRequest(false);
     }
 
     [HttpGet]
