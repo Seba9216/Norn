@@ -44,6 +44,13 @@ public class RabbitConnector : IRabbitConnector
             autoDelete: false);
         await channel.QueueBindAsync(queue: queName, exchange: exchangeName, routingKey: string.Empty);
     }
+    public static async Task ConsumeBasicMessage(IChannel channel, string queName, AsyncEventingBasicConsumer consumer) 
+    {
+        await channel.BasicConsumeAsync(
+          queue: queName,
+          autoAck: false,
+          consumer: consumer);
+    }
 
 
 

@@ -32,14 +32,13 @@ public class BookingApprovedConsumer : BackgroundService
         {
             var message = Encoding.UTF8.GetString(ea.Body.ToArray());
             var booking = JsonConvert.DeserializeObject<Models.Models.Booking>(message);
+
             await _emailSender.SendBookingApprovedEmail(booking);
+
             await channel.BasicAckAsync(ea.DeliveryTag, false);
         };
 
-        await channel.BasicConsumeAsync(
-            queue: _mailQue,
-            autoAck: false,
-            consumer: consumer);
+        await RabbitConnector.ConsumeBasicMessage(channel,_mailQue,consumer);
     }
 
     protected async override Task ExecuteAsync(CancellationToken stoppingToken)

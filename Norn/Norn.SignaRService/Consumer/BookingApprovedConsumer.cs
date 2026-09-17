@@ -36,14 +36,12 @@ public class BookingApprovedConsumer : BackgroundService
         {
             var message = Encoding.UTF8.GetString(ea.Body.ToArray());
             var booking = JsonConvert.DeserializeObject<Models.Models.Booking>(message);
+
             await _nornHub.Clients.All.SendAsync("BookingApproved", booking);
+
             await channel.BasicAckAsync(ea.DeliveryTag, false);
         };
-
-        await channel.BasicConsumeAsync(
-            queue: _signalRQue,
-            autoAck: false,
-            consumer: consumer);
+        await RabbitConnector.ConsumeBasicMessage(channel, _signalRQue, consumer);
     }
 
 
