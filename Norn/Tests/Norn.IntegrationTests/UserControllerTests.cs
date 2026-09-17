@@ -32,7 +32,7 @@ internal class UserControllerTests
 
     public async Task ControllerShouldReturnUserOK()
     {
-        var request = new PromoteUserRequest("IamBrutus@CesarRules.com", "Emporer");
+        var request = new PromoteUserRequest("iambrutus@cesarrules.com", "Emporer");
         _userRepository.Setup(x => x.UpdateRoleForUser(request)).ReturnsAsync(new Models.Models.User());
         var result = await _userController.PromoteUser(request);
         Assert.That(result, Is.InstanceOf<OkObjectResult>());

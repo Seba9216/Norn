@@ -20,7 +20,7 @@ public class Tests
 
         _context.Users.Add(new Norn.Models.Entities.User
         {
-            Email = "IamBrutus@CesarRules.com",
+            Email = "iambrutus@cesarrules.com",
             Password = "IhateCarthago",
             Id = 1,
             RoleId = 2,
@@ -38,7 +38,7 @@ public class Tests
     [Test]
     public async Task TestPromotionShouldBeOK()
     {
-        var userToBePromoted = await _userRepository.UpdateRoleForUser(new Norn.Models.Models.Requests.PromoteUserRequest ("IamBrutus@CesarRules.com", "Emporer"));
+        var userToBePromoted = await _userRepository.UpdateRoleForUser(new Norn.Models.Models.Requests.PromoteUserRequest ("iambrutus@cesarrules.com", "Emporer"));
         Assert.That(userToBePromoted.Role == "Emporer");
     }
 }
