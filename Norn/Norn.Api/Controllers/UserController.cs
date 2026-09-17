@@ -21,6 +21,7 @@ public class UserController : Controller
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
+        
         var user = await _userRepository.GetUserByEmail(request.Email);
         if (user == null) return Unauthorized();
         var validPassword =
@@ -38,6 +39,7 @@ public class UserController : Controller
     [HttpGet("{email}")]
     public async Task<IActionResult> GetUserIdByEmail([FromRoute]string email)
     {
+
         var result = await _userRepository.GetIdByEmail(email);
         if (result is null) return BadRequest();
         return Ok(result);
