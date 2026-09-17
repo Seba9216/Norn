@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System.Text;
+using System.Threading.Channels;
 
 namespace Infrastructure.Connections;
 
@@ -32,7 +34,18 @@ public class RabbitConnector : IRabbitConnector
         var messageAsBytes = Encoding.UTF8.GetBytes(Serilazied);
         await channel.BasicPublishAsync(_mailExchange, string.Empty, messageAsBytes);
     }
-  
+    public static async Task BindExchangesAndQues(IChannel channel, string queName, string exchangeName)
+    {
+        await channel.ExchangeDeclareAsync(exchangeName, ExchangeType.Fanout);
+        await channel.QueueDeclareAsync(
+            queue: queName,
+            durable: true,
+            exclusive: false,
+            autoDelete: false);
+        await channel.QueueBindAsync(queue: queName, exchange: exchangeName, routingKey: string.Empty);
+    }
+
+
 
     public async Task<IChannel> GetEmailChannel()
     {

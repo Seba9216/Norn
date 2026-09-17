@@ -28,24 +28,14 @@ public class BookingApprovedConsumer : BackgroundService
     public async Task ConsumeMessageQueFromEmailService()
     {
         IChannel channel = await _rabbitConnector.GetEmailChannel();
-        await channel.ExchangeDeclareAsync(_mailExchange, ExchangeType.Fanout);
-        await channel.QueueDeclareAsync(
-            queue: _signalRQue,
-            durable: true,
-            exclusive: false,
-            autoDelete: false);
-        await channel.QueueBindAsync(queue: _signalRQue, exchange: _mailExchange, routingKey: string.Empty);
+        await RabbitConnector.BindExchangesAndQues(channel, _signalRQue, _mailExchange);
 
         var consumer = new RabbitMQ.Client.Events.AsyncEventingBasicConsumer(channel);
 
         consumer.ReceivedAsync += async (sender, ea) =>
         {
-            var message =
-                Encoding.UTF8.GetString(ea.Body.ToArray());
-
-            var booking =
-                JsonConvert.DeserializeObject<Models.Models.Booking>(message);
-
+            var message = Encoding.UTF8.GetString(ea.Body.ToArray());
+            var booking = JsonConvert.DeserializeObject<Models.Models.Booking>(message);
             await _nornHub.Clients.All.SendAsync("BookingApproved", booking);
             await channel.BasicAckAsync(ea.DeliveryTag, false);
         };
