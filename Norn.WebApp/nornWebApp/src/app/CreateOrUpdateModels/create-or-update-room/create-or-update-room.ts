@@ -33,7 +33,7 @@ import { OrganisationsRelation } from '../../models/organisations-relation';
   ],
   templateUrl: './create-or-update-room.html',
 })
-export class CreateOrUpdateRoom implements OnInit {
+export class CreateOrUpdateRoom {
   constructor(@Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateRoomData) {
     if (data != null) {
       this.orgsToAdd = this.data.organisations;
@@ -53,6 +53,7 @@ export class CreateOrUpdateRoom implements OnInit {
       label: key,
       value: TimeLease[key as keyof typeof TimeLease],
     }));
+
   public room: CreateOrUpdateRoomModel = {
     id: 0,
     monday: true,
@@ -69,10 +70,19 @@ export class CreateOrUpdateRoom implements OnInit {
     organisationIds: [],
     name: '',
   };
-  ngOnInit(): void {}
   public orgsToAdd: OrganisationsRelation[] = [];
-
+  public isMinutesSelected : boolean = false;
   readonly dialogRef = inject(MatDialogRef<CreateOrUpdateOrganisation>);
+
+  loadCorrectIncrements(timeLease : TimeLease){
+    if(timeLease == TimeLease.Minutes){
+      this.isMinutesSelected = true;
+    }else{
+      this.isMinutesSelected = false;
+    }
+    
+  }
+
   close() {
     this.dialogRef.close();
   }

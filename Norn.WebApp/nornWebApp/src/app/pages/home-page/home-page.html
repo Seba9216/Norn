@@ -13,7 +13,7 @@
     @if (selectedOrganisationId) {
       <mat-form-field>
         <mat-label>Rooms</mat-label>
-        <mat-select [(value)]="selectedRoomId" (selectionChange)="loadTimeIntervals($event.value)">
+        <mat-select [(value)]="selectedRoomId" (valueChange)="loadTimeIntervals($event)">
           @for (room of currentRooms; track room.id) {
             <mat-option [value]="room.id">
               {{ room.name }}

@@ -56,7 +56,7 @@ public class RabbitConnector : IRabbitConnector
 
     public async Task<IChannel> GetChannel()
     {
-        if (_currentChannel != null)
+        if (_currentChannel == null)
         {
             var connection = await GetRabbitConnection();
             var channel = await connection.CreateChannelAsync();

@@ -65,7 +65,7 @@ public class BookingRepository : ListingRepo<Booking>, IBookingRepository
     {
         try
         {
-            var isthisBooked = await _timeIntervalRepository.DoesTimeIntervalHaveBooking(request.TimeIntervalId);
+            var isthisBooked = await _timeIntervalRepository.DoesTimeIntervalHaveBooking(request.TimeIntervalId, request.UserId);
             if (isthisBooked)
             {
                 return null; 

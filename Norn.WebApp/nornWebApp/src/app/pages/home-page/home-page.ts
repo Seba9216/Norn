@@ -73,7 +73,6 @@ export class HomePage implements OnInit {
   async loadTimeIntervals(roomId: number) {
     const times = await this.timeIntervalService.GetTimeIntervalsRelatedToRoom(roomId);
     this.timeIntervals = times;
-    this.cdr.detectChanges();
     this.buildWeeks();
   }
   selectInterval(interval: TimeInterval) {
@@ -91,6 +90,9 @@ export class HomePage implements OnInit {
       });
       try {
         await this.bookingService.createBooking(bookingRequest);
+        this.dialog.open(DisplayMessage, {
+          data: 'booking made',
+        });
       } catch {
         this.dialog.open(DisplayMessage, {
           data: 'Could not make booking',

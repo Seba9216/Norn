@@ -38,7 +38,6 @@ export class LoginPage implements OnInit {
         this.dialog.open(DisplayMessage, {
           data: 'Could not create user',
         });
-        console.log('shown');
       }
     }
   }
@@ -47,9 +46,17 @@ export class LoginPage implements OnInit {
       email: this.userName,
       password: this.password,
     });
+    try{
 
+    
     var result = await this.userService.loginUser(userModel);
     localStorage.setItem('token', result.token);
+    
     this.router.navigate(['/home']);
+    }catch{
+        this.dialog.open(DisplayMessage, {
+          data: 'Login failed',
+        });
+    }
   }
 }

@@ -8,29 +8,31 @@ namespace Norn.Repository;
 public class TimeIntervalRepository : ListingRepo<TimeInterval>, ITimeIntervalRepository
 {
     private NornContext _nornContext;
+    private IUserRepository _userRepository;
     private byte _yearsToCalculate = 1;
     private byte _openingHourDefault = 0;
     private byte _closingHourDefault = 24;
 
-    public TimeIntervalRepository(NornContext context) : base(context)
+    public TimeIntervalRepository(NornContext context, IUserRepository userRepository) : base(context)
     {
         _nornContext = context;
+        _userRepository = userRepository;
     }
-    public async Task<List<TimeInterval>>UpdateTimesForRoom(Room room)
+    public async Task<List<TimeInterval>> UpdateTimesForRoom(Room room)
     {
         var intervalsToRemove = await _nornContext.TimeIntervals.Where(x => x.RoomId == room.Id).ToListAsync();
         _nornContext.TimeIntervals.RemoveRange(intervalsToRemove);
         await _nornContext.SaveChangesAsync();
         return await CreateTimeSchemaFromRoom(room);
     }
-    
-    
+
+
     /// <summary>
     /// Pr default this methods makes times too book for a year at the time.
     /// </summary>
     /// <param name="room"></param>
     /// <returns></returns>
-    
+
 
     public async Task<List<TimeInterval>> CreateTimeSchemaFromRoom(Room room)
     {
@@ -60,7 +62,7 @@ public class TimeIntervalRepository : ListingRepo<TimeInterval>, ITimeIntervalRe
                             intervals.Add(new TimeInterval
                             {
                                 RoomId = room.Id,
-                                From = DateTime.SpecifyKind(start,DateTimeKind.Utc),
+                                From = DateTime.SpecifyKind(start, DateTimeKind.Utc),
                                 To = DateTime.SpecifyKind(next, DateTimeKind.Utc),
                             });
                             start = next;
@@ -99,7 +101,7 @@ public class TimeIntervalRepository : ListingRepo<TimeInterval>, ITimeIntervalRe
                             RoomId = room.Id,
                             From = date.Date.ToUniversalTime().AddHours(room.FromHour ?? _openingHourDefault),
                             To = date.Date.AddDays(1).ToUniversalTime().AddHours(room.ToHour ?? _closingHourDefault)
-                        }); 
+                        });
                         break;
                     }
             }
@@ -116,23 +118,29 @@ public class TimeIntervalRepository : ListingRepo<TimeInterval>, ITimeIntervalRe
         }
         return null;
     }
-    public async Task<bool> DoesTimeIntervalHaveBooking(int id)
+    public async Task<bool> DoesTimeIntervalHaveBooking(int id, int userId)
     {
-        var found = await GetByPrimaryKey(id, x => x.Include(x => x.Bookings));
-        if(found is null || found.Bookings is null)
+        var found = await GetByPrimaryKey(id, x => x.Include(x => x.Bookings).ThenInclude(x => x.User));
+        if (found is null || found.Bookings is null)
         {
             throw new InvalidOperationException("No timeInterval");
         }
         if (found.Bookings is not null)
         {
+            //Duplicate booking
+            if (found.Bookings.Any(x => x.User.Id == userId))
+            {
+                return true;
+            }
             return found.Bookings.Any(x => x.BookingStatusId == 2);
         }
         return false;
     }
     public async Task<List<Models.Models.TimeIntervalRelation>> GetRoomRelatedTimeIntervals(int roomId)
     {
-         return await _nornContext.TimeIntervals.Include(x => x.Bookings).Where(x => x.RoomId == roomId).Select(x => TimeIntervalMapper.MapToModel(x)).ToListAsync();
-    } 
+        var result = await GetAllEntities(x => x.Include(x => x.Bookings).Where(x => x.RoomId == roomId));
+        return result.Select(x => TimeIntervalMapper.MapToModel(x)).ToList();
+    }
 
     private bool IsValidDay(Room room, DateTime date)
     {
@@ -148,6 +156,5 @@ public class TimeIntervalRepository : ListingRepo<TimeInterval>, ITimeIntervalRe
             _ => false
         };
     }
-
 
 }
