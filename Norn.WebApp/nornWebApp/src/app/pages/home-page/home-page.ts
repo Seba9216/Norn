@@ -42,6 +42,7 @@ export class HomePage implements OnInit {
   private authService = inject(AuthService);
   private userService = inject(UserService);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
   private organisationService = inject(OrganisationService);
   private timeIntervalService = inject(TimeIntervalService);
   private bookingService = inject(BookingService);
@@ -64,6 +65,7 @@ export class HomePage implements OnInit {
   }
 
   async loadRooms(orgId: number) {
+
     const currentRoomsIds = await this.organisationService.getRelatedRooms(orgId);
     this.currentRooms = this.rooms.filter((room) => currentRoomsIds.some((id) => id === room.id));
   }
@@ -71,6 +73,7 @@ export class HomePage implements OnInit {
   async loadTimeIntervals(roomId: number) {
     const times = await this.timeIntervalService.GetTimeIntervalsRelatedToRoom(roomId);
     this.timeIntervals = times;
+    this.cdr.detectChanges();
     this.buildWeeks();
   }
   selectInterval(interval: TimeInterval) {

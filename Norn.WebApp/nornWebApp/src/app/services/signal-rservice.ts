@@ -12,7 +12,6 @@ export class SignalRService {
   private hubConnection: signalR.HubConnection;
   private snackBar: MatSnackBar;
 
-  public bookingConfirmed: BookingModel | null = null;
   private hubConnectionAdress: string = 'http://localhost:8008/nornHub';
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
@@ -33,7 +32,6 @@ export class SignalRService {
     this.hubConnection.on('BookingApproved', (...args) => {
       const booking = args[0] as BookingModel;
       if (this.authService.getEmail() == booking!.user?.email) {
-        this.bookingConfirmed = booking;
         this.snackBar.open(
           'Your booking at ' + booking.room?.roomName + ' has been approved!',
           'Close',
@@ -44,7 +42,6 @@ export class SignalRService {
           },
         );
       } else {
-        this.bookingConfirmed = null;
       }
     });
   };

@@ -3,18 +3,18 @@ using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
-using System.Threading.Channels;
 
 namespace Infrastructure.Connections;
 
 public class RabbitConnector : IRabbitConnector
 {
     IConfiguration _configuration;
-    private string _mailExchange;
+    private string _bookingApprovedExchange;
+    private IChannel _currentChannel;
     public RabbitConnector(IConfiguration configuration)
     {
         _configuration = configuration;
-        _mailExchange = _configuration["RABBITMQ_EMAIL_CHANNEL"];
+        _bookingApprovedExchange = _configuration["RABBITMQ_EMAIL_CHANNEL"];
     }
     public async Task<IConnection?> GetRabbitConnection()
     {
@@ -26,13 +26,13 @@ public class RabbitConnector : IRabbitConnector
         var connection = await connectionFactory.CreateConnectionAsync();
         return connection;
     }
-    public async Task PublishMessageQueForEmailService(object message)
+    public async Task PublishMessageToExchangeForServices(object message)
     {
-        var channel = await GetEmailChannel();
-        await channel.ExchangeDeclareAsync(_mailExchange, ExchangeType.Fanout);
+        var channel = await GetChannel();
+        await channel.ExchangeDeclareAsync(_bookingApprovedExchange, ExchangeType.Fanout);
         var Serilazied = JsonConvert.SerializeObject(message);
         var messageAsBytes = Encoding.UTF8.GetBytes(Serilazied);
-        await channel.BasicPublishAsync(_mailExchange, string.Empty, messageAsBytes);
+        await channel.BasicPublishAsync(_bookingApprovedExchange, string.Empty, messageAsBytes);
     }
     public static async Task BindExchangesAndQues(IChannel channel, string queName, string exchangeName)
     {
@@ -54,10 +54,14 @@ public class RabbitConnector : IRabbitConnector
 
 
 
-    public async Task<IChannel> GetEmailChannel()
+    public async Task<IChannel> GetChannel()
     {
-        var connection = await GetRabbitConnection();
-        var channel = await connection.CreateChannelAsync();
-        return channel;
+        if (_currentChannel != null)
+        {
+            var connection = await GetRabbitConnection();
+            var channel = await connection.CreateChannelAsync();
+            return channel;
+        }
+        return _currentChannel;
     }
 }

@@ -12,7 +12,7 @@ public class BookingApprovedConsumer : BackgroundService
     IConfiguration _configuration;
     IRabbitConnector _rabbitConnector;
     IHubContext<NornHub> _nornHub;
-    private string _mailExchange;
+    private string _bookingApprovedExchange;
     private readonly string _signalRQue = "SignalRQueue";
 
 
@@ -20,18 +20,18 @@ public class BookingApprovedConsumer : BackgroundService
     {
         _configuration = configuration;
         _rabbitConnector = rabbitConnector;
-        _mailExchange = _configuration["RABBITMQ_EMAIL_CHANNEL"];
+        _bookingApprovedExchange = _configuration["RABBITMQ_EMAIL_CHANNEL"];
         _nornHub = nornHub;
     }
 
 
     public async Task ConsumeMessageQueFromEmailService()
     {
-        IChannel channel = await _rabbitConnector.GetEmailChannel();
-        await RabbitConnector.BindExchangesAndQues(channel, _signalRQue, _mailExchange);
+        IChannel channel = await _rabbitConnector.GetChannel();
+        await RabbitConnector.BindExchangesAndQues(channel, _signalRQue, _bookingApprovedExchange);
 
         var consumer = new RabbitMQ.Client.Events.AsyncEventingBasicConsumer(channel);
-
+        
         consumer.ReceivedAsync += async (sender, ea) =>
         {
             var message = Encoding.UTF8.GetString(ea.Body.ToArray());

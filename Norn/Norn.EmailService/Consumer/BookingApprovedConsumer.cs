@@ -9,22 +9,22 @@ namespace Norn.EmailService.Consumer;
 public class BookingApprovedConsumer : BackgroundService
 {
     IConfiguration _configuration;
-    private string _mailExchange;
+    private string _bookingApprovedExchange;
     private readonly string _mailQue = "EmailQueue";
     private IRabbitConnector _rabbitConnector;
     private Mail.IEmailSender _emailSender;
     public BookingApprovedConsumer(IConfiguration configuration, IRabbitConnector rabbitConnector, Mail.IEmailSender emailSender)
     {
         _configuration = configuration;
-        _mailExchange = _configuration["RABBITMQ_EMAIL_CHANNEL"];
+        _bookingApprovedExchange = _configuration["RABBITMQ_EMAIL_CHANNEL"];
         _rabbitConnector = rabbitConnector;
         _emailSender = emailSender;
     }
 
     public async Task ConsumeMessageQueFromEmailService()
     {
-        IChannel channel = await _rabbitConnector.GetEmailChannel();
-        await RabbitConnector.BindExchangesAndQues(channel, _mailQue, _mailExchange);
+        IChannel channel = await _rabbitConnector.GetChannel();
+        await RabbitConnector.BindExchangesAndQues(channel, _mailQue, _bookingApprovedExchange);
 
         var consumer = new AsyncEventingBasicConsumer(channel);
 

@@ -56,7 +56,7 @@ public class BookingController : Controller
     {
         var result = await _bookingRepository.ApproveBookingById(id);
         if (result is null) return BadRequest();
-        await _rabbitConnectior.PublishMessageQueForEmailService(result);
+        await _rabbitConnectior.PublishMessageToExchangeForServices(result);
         return Ok(result);
     }
     [HttpPut("cancel")]
