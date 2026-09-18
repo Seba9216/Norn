@@ -1,17 +1,18 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { BookingModel } from '../../models/booking-model';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth-service';
 import { BookingService } from '../../services/booking-service';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-booking-page',
-  imports: [CommonModule, MatTableModule],
+  imports: [CommonModule, MatTableModule,MatPaginatorModule],
   templateUrl: './booking-page.html',
 })
-export class BookingPage implements OnInit {
+export class BookingPage implements OnInit,AfterViewInit {
   route = inject(ActivatedRoute);
   authService = inject(AuthService);
   bookingService = inject(BookingService);
@@ -19,10 +20,17 @@ export class BookingPage implements OnInit {
 
   public displayedColumns = ['room', 'from', 'to', 'user', 'status', 'actions'];
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   public bookings: BookingModel[] = [];
+  public dataSource = new MatTableDataSource<BookingModel>();
+
   async ngOnInit() {
     this.bookings = this.route.snapshot.data['bookings'] as BookingModel[];
+    this.dataSource.data = this.bookings;
   }
+  ngAfterViewInit(): void {
+this.dataSource.paginator = this.paginator;
+}
 
   isAdmin(): boolean {
     return this.authService.isAdministrator();
