@@ -55,8 +55,8 @@ this.dataSource.paginator = this.paginator;
     } else {
       const email = this.authService.getEmail() as string;
       this.bookings = await this.bookingService.GetAllBookingsForUser(email);
-      this.dataSource.data = this.bookings;
     }
+    this.dataSource.data = this.bookings;
     this.cdr.detectChanges();
   }
 }

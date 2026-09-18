@@ -128,7 +128,7 @@ public class TimeIntervalRepository : ListingRepo<TimeInterval>, ITimeIntervalRe
         if (found.Bookings is not null)
         {
             //Duplicate booking
-            if (found.Bookings.Any(x => x.User.Id == userId))
+            if (found.Bookings.Any(x => x.User.Id == userId && x.BookingStatusId != 3))
             {
                 return true;
             }
