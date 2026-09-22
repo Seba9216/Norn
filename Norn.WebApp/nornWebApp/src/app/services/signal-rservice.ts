@@ -12,7 +12,7 @@ export class SignalRService {
   private hubConnection: signalR.HubConnection;
   private snackBar: MatSnackBar;
 
-  private hubConnectionAdress: string = 'http://localhost:8008/nornHub';
+  private hubConnectionAdress: string = 'signalrservice/nornHub';
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.hubConnectionAdress, {
