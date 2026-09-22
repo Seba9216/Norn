@@ -13,4 +13,4 @@ RUN npm install -g serve
 
 EXPOSE 4200
 
-CMD ["serve", "-s", "dist/my-app/browser", "-l", "4200"]
+CMD ["serve", "-s", "dist/nornWebApp/browser", "-l", "4200"]
