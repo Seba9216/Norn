@@ -14,7 +14,7 @@ public class RabbitConnector : IRabbitConnector
     public RabbitConnector(IConfiguration configuration)
     {
         _configuration = configuration;
-        _bookingApprovedExchange = _configuration["RABBITMQ_EMAIL_CHANNEL"];
+        _bookingApprovedExchange = _configuration["RABBITMQ_EXCHANGE_APPROVED"];
     }
     public async Task<IConnection?> GetRabbitConnection()
     {

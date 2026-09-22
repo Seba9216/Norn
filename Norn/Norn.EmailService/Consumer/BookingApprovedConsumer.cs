@@ -16,7 +16,7 @@ public class BookingApprovedConsumer : BackgroundService
     public BookingApprovedConsumer(IConfiguration configuration, IRabbitConnector rabbitConnector, Mail.IEmailSender emailSender)
     {
         _configuration = configuration;
-        _bookingApprovedExchange = _configuration["RABBITMQ_EMAIL_CHANNEL"];
+        _bookingApprovedExchange = _configuration["RABBITMQ_EXCHANGE_APPROVED"];
         _rabbitConnector = rabbitConnector;
         _emailSender = emailSender;
     }

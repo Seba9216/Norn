@@ -73,7 +73,10 @@ export class HomePage implements OnInit {
   async loadTimeIntervals(roomId: number) {
     const times = await this.timeIntervalService.GetTimeIntervalsRelatedToRoom(roomId);
     this.timeIntervals = times;
+    this.currentWeekIndex = 0;
     this.buildWeeks();
+
+    
   }
   selectInterval(interval: TimeInterval) {
     this.selectedInterval = interval;

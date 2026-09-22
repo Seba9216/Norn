@@ -20,7 +20,7 @@ public class BookingApprovedConsumer : BackgroundService
     {
         _configuration = configuration;
         _rabbitConnector = rabbitConnector;
-        _bookingApprovedExchange = _configuration["RABBITMQ_EMAIL_CHANNEL"];
+        _bookingApprovedExchange = _configuration["RABBITMQ_EXCHANGE_APPROVED"];
         _nornHub = nornHub;
     }
 
