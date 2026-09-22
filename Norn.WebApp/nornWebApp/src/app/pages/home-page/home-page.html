@@ -57,7 +57,7 @@
               </mat-card-header>
               <mat-card-content>
                 @if (day.intervals.length > 0) {
-                  @for (interval of day.intervals; track interval.id) {
+                  @for (interval of day.intervals; track $index)  {
                     @if (interval.isBooked) {
                       <button type="button" class="btn btn-danger" disabled>
                         {{ interval.from | date: 'HH:mm' : 'UTC' }}

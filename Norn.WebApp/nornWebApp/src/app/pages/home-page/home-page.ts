@@ -75,8 +75,7 @@ export class HomePage implements OnInit {
     this.timeIntervals = times;
     this.currentWeekIndex = 0;
     this.buildWeeks();
-
-    
+    this.cdr.markForCheck();
   }
   selectInterval(interval: TimeInterval) {
     this.selectedInterval = interval;
