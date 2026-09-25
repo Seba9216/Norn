@@ -39,6 +39,6 @@ public class Tests
     public async Task TestPromotionShouldBeOK()
     {
         var userToBePromoted = await _userRepository.UpdateRoleForUser(new Norn.Models.Models.Requests.PromoteUserRequest ("iambrutus@cesarrules.com", "Emporer"));
-        Assert.That(userToBePromoted.Role == "Emporer");
+        Assert.That(userToBePromoted.Role == "Emporer1");
     }
 }
