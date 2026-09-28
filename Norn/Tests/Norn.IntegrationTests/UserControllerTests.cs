@@ -35,6 +35,6 @@ internal class UserControllerTests
         var request = new PromoteUserRequest("iambrutus@cesarrules.com", "Emporer");
         _userRepository.Setup(x => x.UpdateRoleForUser(request)).ReturnsAsync(new Models.Models.User());
         var result = await _userController.PromoteUser(request);
-        Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+        Assert.That(result, Is.InstanceOf<OkObjectResult>());
     }
 }
